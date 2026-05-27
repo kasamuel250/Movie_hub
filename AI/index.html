@@ -1,0 +1,3374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasamuel AI — Advanced Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #0a0e0d;
+    --bg-secondary: #111916;
+    --bg-tertiary: #162019;
+    --bg-quaternary: #1a2520;
+    --fg: #e8f0ec;
+    --fg-muted: #7a9489;
+    --fg-dim: #5a6b64;
+    --accent: #00e89d;
+    --accent-dim: #00c583;
+    --accent-bright: #00ffaa;
+    --accent-glow: rgba(0, 232, 157, 0.15);
+    --accent-glow-strong: rgba(0, 232, 157, 0.3);
+    --accent-glow-subtle: rgba(0, 232, 157, 0.08);
+    --gold: #f0c040;
+    --gold-dim: #d4a936;
+    --card: rgba(17, 25, 22, 0.85);
+    --card-hover: rgba(17, 25, 22, 0.95);
+    --border: rgba(0, 232, 157, 0.12);
+    --border-strong: rgba(0, 232, 157, 0.25);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --danger: #ff4d6a;
+    --danger-dim: #e63946;
+    --warning: #f77f00;
+    --success: #06ffa5;
+    --code-bg: #0d1512;
+    --user-bubble: rgba(0, 232, 157, 0.08);
+    --user-bubble-hover: rgba(0, 232, 157, 0.12);
+    --ai-bubble: rgba(255,255,255,0.03);
+    --ai-bubble-hover: rgba(255,255,255,0.06);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-accent: 0 0 20px rgba(0, 232, 157, 0.3);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-lg: 20px;
+    --font-ui: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Neural network canvas */
+  #neural-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Ambient glow blobs */
+  .ambient-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-1 { width: 500px; height: 500px; background: rgba(0,232,157,0.06); top: -10%; left: -5%; animation: floatGlow 20s ease-in-out infinite; }
+  .glow-2 { width: 400px; height: 400px; background: rgba(240,192,64,0.04); bottom: -10%; right: -5%; animation: floatGlow 25s ease-in-out infinite reverse; }
+  .glow-3 { width: 300px; height: 300px; background: rgba(0,232,157,0.04); top: 50%; left: 60%; animation: floatGlow 18s ease-in-out infinite 5s; }
+
+  @keyframes floatGlow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.1); }
+    66% { transform: translate(-20px, 30px) scale(0.9); }
+  }
+
+  /* Main layout */
+  .app-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), #007a52);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px; color: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.25));
+    border-radius: inherit;
+  }
+
+  .logo-text {
+    display: flex; flex-direction: column;
+  }
+  .logo-text strong {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--fg);
+  }
+  .logo-text span {
+    font-size: 11px; color: var(--fg-muted); font-weight: 400;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  .new-chat-btn {
+    margin: 16px 16px 8px;
+    padding: 12px 16px;
+    background: var(--accent-glow);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-family: var(--font-ui);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .new-chat-btn:hover {
+    background: var(--accent-glow-strong);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .new-chat-btn:active { transform: translateY(0); }
+
+  .chat-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .history-label {
+    padding: 8px 12px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  .history-item {
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--fg-muted);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .history-item i { font-size: 12px; opacity: 0.5; flex-shrink: 0; }
+  .history-item:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--fg);
+  }
+  .history-item.active {
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+  .history-item .delete-chat {
+    position: absolute;
+    right: 8px;
+    opacity: 0;
+    color: var(--danger);
+    font-size: 11px;
+    transition: opacity 0.15s;
+    padding: 4px;
+  }
+  .history-item:hover .delete-chat { opacity: 0.7; }
+  .history-item .delete-chat:hover { opacity: 1; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-footer button {
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    color: var(--fg-muted);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; gap: 10px;
+    transition: all 0.15s;
+  }
+  .sidebar-footer button:hover { background: rgba(255,255,255,0.04); color: var(--fg); }
+  .sidebar-footer button i { width: 16px; text-align: center; }
+
+  /* Main chat area */
+  .main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    position: relative;
+  }
+
+  .main-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(10, 14, 13, 0.7);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .main-header-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none; border: none; color: var(--fg-muted);
+    font-size: 18px; cursor: pointer; padding: 4px;
+  }
+
+  .model-selector {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    color: var(--fg);
+    font-family: var(--font-ui);
+  }
+  .model-selector:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.05); }
+  .model-selector .model-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .model-selector i { font-size: 10px; color: var(--fg-muted); transition: transform 0.2s; }
+
+  .model-dropdown {
+    position: absolute;
+    top: 60px; left: 24px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 6px;
+    min-width: 220px;
+    z-index: 20;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    display: none;
+    animation: dropIn 0.2s ease;
+  }
+  .model-dropdown.show { display: block; }
+  @keyframes dropIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .model-option {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+    transition: all 0.15s;
+    color: var(--fg-muted);
+  }
+  .model-option:hover { background: rgba(255,255,255,0.04); color: var(--fg); }
+  .model-option.selected { background: var(--accent-glow); color: var(--accent); }
+  .model-option .model-tag {
+    font-size: 9px; padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-pro { background: rgba(240,192,64,0.15); color: var(--gold); }
+  .tag-fast { background: rgba(0,232,157,0.15); color: var(--accent); }
+  .tag-reason { background: rgba(120,140,255,0.15); color: #8a9aff; }
+
+  .header-actions { display: flex; gap: 4px; }
+  .header-actions button {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--fg-muted);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .header-actions button:hover { background: rgba(255,255,255,0.04); color: var(--fg); border-color: var(--border-strong); }
+
+  /* Messages */
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 0;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .message-row {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px;
+    animation: msgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-row + .message-row { margin-top: 20px; }
+
+  .message-inner {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .msg-avatar {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    margin-top: 2px;
+  }
+  .msg-avatar.ai-avatar {
+    background: linear-gradient(135deg, var(--accent), #007a52);
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(0,232,157,0.2);
+  }
+  .msg-avatar.user-avatar {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: var(--fg-muted);
+  }
+
+  .msg-content { flex: 1; min-width: 0; }
+
+  .msg-name {
+    font-size: 12px; font-weight: 600; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .msg-name.ai-name { color: var(--accent); }
+  .msg-name.user-name { color: var(--fg-muted); }
+  .msg-time { font-size: 10px; color: var(--fg-muted); opacity: 0.5; font-weight: 400; }
+
+  .msg-body {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--fg);
+    word-break: break-word;
+  }
+  .msg-body p { margin-bottom: 10px; }
+  .msg-body p:last-child { margin-bottom: 0; }
+  .msg-body strong { color: var(--accent); font-weight: 600; }
+  .msg-body em { color: var(--gold); font-style: italic; }
+  .msg-body ul, .msg-body ol { margin: 8px 0; padding-left: 20px; }
+  .msg-body li { margin-bottom: 4px; }
+  .msg-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+  .msg-body code {
+    font-family: var(--font-mono);
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    color: var(--accent);
+  }
+
+  .code-block {
+    margin: 12px 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--code-bg);
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px; color: var(--fg-muted);
+    font-family: var(--font-mono);
+  }
+  .copy-code-btn {
+    background: none; border: none;
+    color: var(--fg-muted); cursor: pointer;
+    font-size: 11px; font-family: var(--font-ui);
+    display: flex; align-items: center; gap: 5px;
+    transition: color 0.15s;
+  }
+  .copy-code-btn:hover { color: var(--accent); }
+  .code-block pre {
+    padding: 14px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--fg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .code-block .kw { color: #ff79c6; }
+  .code-block .str { color: #f0c040; }
+  .code-block .num { color: #8be9fd; }
+  .code-block .cm { color: #5a7a6d; font-style: italic; }
+  .code-block .fn { color: #00e89d; }
+  .code-block .op { color: #ff79c6; }
+
+  .msg-actions {
+    display: flex; gap: 2px; margin-top: 8px; opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .message-row:hover .msg-actions { opacity: 1; }
+  .msg-actions button {
+    background: none; border: none;
+    color: var(--fg-muted); cursor: pointer;
+    font-size: 12px; padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+    font-family: var(--font-ui);
+  }
+  .msg-actions button:hover { background: rgba(255,255,255,0.05); color: var(--fg); }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: flex; gap: 4px; padding: 8px 0;
+  }
+  .typing-indicator span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.4;
+    animation: typingBounce 1.4s ease-in-out infinite;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-8px); opacity: 1; }
+  }
+
+  /* Welcome screen */
+  .welcome-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .welcome-logo {
+    width: 80px; height: 80px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--accent), #007a52);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800; color: var(--bg);
+    margin-bottom: 24px;
+    position: relative;
+    animation: logoPulse 4s ease-in-out infinite;
+    box-shadow: 0 0 60px rgba(0,232,157,0.2), 0 0 120px rgba(0,232,157,0.1);
+  }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 0 60px rgba(0,232,157,0.2), 0 0 120px rgba(0,232,157,0.1); }
+    50% { box-shadow: 0 0 80px rgba(0,232,157,0.3), 0 0 160px rgba(0,232,157,0.15); }
+  }
+
+  .welcome-title {
+    font-size: 36px; font-weight: 700; letter-spacing: -1px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--fg), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .welcome-sub {
+    font-size: 15px; color: var(--fg-muted); max-width: 440px;
+    line-height: 1.6; margin-bottom: 36px;
+  }
+
+  .suggestions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .suggestion-card {
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .suggestion-card:hover {
+    border-color: var(--border-strong);
+    background: var(--accent-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .suggestion-card .sc-icon {
+    font-size: 18px; margin-bottom: 10px; color: var(--accent);
+  }
+  .suggestion-card .sc-title {
+    font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 4px;
+  }
+  .suggestion-card .sc-desc {
+    font-size: 11.5px; color: var(--fg-muted); line-height: 1.4;
+  }
+
+  /* Input area */
+  .input-area {
+    padding: 16px 24px 24px;
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(10, 14, 13, 0.8);
+  }
+
+  .input-wrapper {
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .input-box {
+    display: flex;
+    align-items: flex-end;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 8px 8px 18px;
+    transition: all 0.25s;
+  }
+  .input-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow), 0 8px 40px rgba(0,0,0,0.3);
+  }
+
+  .input-box textarea {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--fg);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none;
+    max-height: 160px;
+    padding: 8px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .input-box textarea::placeholder { color: var(--fg-muted); opacity: 0.5; }
+
+  .input-actions {
+    display: flex; align-items: center; gap: 2px;
+    padding-bottom: 4px;
+  }
+
+  .input-actions button {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: none;
+    color: var(--fg-muted);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .input-actions button:hover { background: rgba(255,255,255,0.06); color: var(--fg); }
+
+  .send-btn {
+    width: 38px !important; height: 38px !important;
+    border-radius: 10px !important;
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    font-size: 16px !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 0 20px rgba(0,232,157,0.2);
+  }
+  .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,232,157,0.35); }
+  .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .input-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+  .input-footer span { font-size: 11px; color: var(--fg-muted); opacity: 0.4; }
+  .char-count { font-family: var(--font-mono); }
+
+  /* Voice recording overlay */
+  .voice-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(20px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .voice-overlay.active { display: flex; }
+  .voice-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    animation: voicePulse 1.5s ease-in-out infinite;
+    box-shadow: 0 0 40px rgba(0,232,157,0.2);
+  }
+  @keyframes voicePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0,232,157,0.2); }
+    50% { transform: scale(1.08); box-shadow: 0 0 60px rgba(0,232,157,0.4); }
+  }
+  .voice-ring i { font-size: 40px; color: var(--accent); }
+  .voice-text { font-size: 16px; color: var(--fg); }
+  .voice-stop-btn {
+    margin-top: 10px;
+    padding: 12px 32px;
+    border-radius: 30px;
+    border: 1px solid var(--danger);
+    background: rgba(255,77,106,0.1);
+    color: var(--danger);
+    font-family: var(--font-ui);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .voice-stop-btn:hover { background: rgba(255,77,106,0.2); }
+
+  /* Toast */
+  .toast-container {
+    position: fixed;
+    top: 20px; right: 20px;
+    z-index: 200;
+    display: flex; flex-direction: column;
+    gap: 8px;
+  }
+  .toast {
+    padding: 12px 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--fg);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 10px;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+  }
+  .toast i { color: var(--accent); }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes toastOut { to { opacity: 0; transform: translateX(40px); } }
+  @keyframes modalIn { 
+    from { 
+      opacity: 0; 
+      transform: scale(0.9) translateY(-20px); 
+    } 
+    to { 
+      opacity: 1; 
+      transform: scale(1) translateY(0); 
+    } 
+  }
+  @keyframes modalOut { 
+    to { 
+      opacity: 0; 
+      transform: scale(0.9) translateY(-20px); 
+    } 
+  }
+  @keyframes modalOverlayIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+  }
+  @keyframes modalOverlayOut { 
+    to { opacity: 0; } 
+  }
+
+  /* Enhanced modal system */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { 
+    display: flex; 
+    animation: modalOverlayIn var(--transition-normal) ease;
+  }
+  .modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 460px;
+    width: 90%;
+    box-shadow: var(--shadow-lg), var(--shadow-accent);
+    animation: modalIn var(--transition-normal) ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .modal h2 { 
+    font-size: 20px; 
+    font-weight: 700; 
+    margin-bottom: 24px; 
+    background: linear-gradient(135deg, var(--fg), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    letter-spacing: -0.5px;
+  }
+  .modal-field { margin-bottom: 20px; }
+  .modal-field label { 
+    display: block; 
+    font-size: 13px; 
+    font-weight: 600; 
+    color: var(--fg-muted); 
+    margin-bottom: 8px; 
+    text-transform: uppercase; 
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-field label i {
+    color: var(--accent);
+    font-size: 12px;
+  }
+  .modal-field input, .modal-field select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    outline: none;
+    transition: all var(--transition-fast);
+    position: relative;
+  }
+  .modal-field input:focus, .modal-field select:focus { 
+    border-color: var(--accent); 
+    box-shadow: 0 0 0 3px var(--accent-glow-subtle);
+    transform: translateY(-1px);
+  }
+  .modal-field input::placeholder {
+    color: var(--fg-dim);
+    opacity: 0.7;
+  }
+  .modal-field input.loading {
+    background-image: linear-gradient(90deg, var(--bg) 0%, var(--bg-tertiary) 50%, var(--bg) 100%);
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.5s infinite;
+    color: transparent;
+  }
+  @keyframes loadingShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  .modal-field .error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 77, 106, 0.1);
+  }
+  .modal-field .error:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255, 77, 106, 0.2);
+  }
+  .field-error {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+  }
+  .field-error.show {
+    display: block;
+    animation: slideDown 0.2s ease;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-field select option { background: var(--bg); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+  .modal-footer { 
+    margin-top: 20px; 
+    padding-top: 16px; 
+    border-top: 1px solid var(--border); 
+    text-align: center;
+  }
+  .modal-footer p { 
+    font-size: 13px; 
+    color: var(--fg-muted); 
+    margin: 0;
+  }
+  .modal-footer a { 
+    color: var(--accent); 
+    text-decoration: none; 
+    font-weight: 500;
+  }
+  .modal-footer a:hover { 
+    text-decoration: underline; 
+  }
+  .modal-actions button {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+  }
+  .btn-cancel { 
+    background: none; 
+    color: var(--fg-muted); 
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-cancel:hover { 
+    background: var(--bg); 
+    color: var(--fg); 
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-cancel:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  .btn-save { 
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim)); 
+    color: var(--bg); 
+    border-color: var(--accent) !important;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-save::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left var(--transition-normal);
+  }
+  .btn-save:hover::before {
+    left: 100%;
+  }
+  .btn-save:hover { 
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md), var(--shadow-accent);
+    background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+  }
+  .btn-save:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+  /* Mobile sidebar overlay */
+  .sidebar-overlay {
+    position: fixed; inset: 0; z-index: 9;
+    background: rgba(0,0,0,0.5);
+    display: none;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* Enhanced responsive design */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0;
+      height: 100vh;
+      z-index: 10;
+      transform: translateX(-100%);
+      box-shadow: var(--shadow-lg);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .menu-toggle { display: flex; }
+    .suggestions-grid { grid-template-columns: 1fr; gap: 12px; }
+    .welcome-title { font-size: 28px; }
+    .welcome-sub { font-size: 14px; }
+    .message-row { padding: 0 16px; }
+    .input-area { padding: 12px 16px 16px; }
+    .modal {
+      padding: 24px;
+      margin: 20px;
+      max-width: none;
+      width: calc(100% - 40px);
+    }
+    .modal h2 { font-size: 18px; }
+    .main-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-actions {
+      gap: 8px;
+    }
+    .header-actions button {
+      width: 36px;
+      height: 36px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .modal {
+      padding: 20px;
+      margin: 16px;
+      width: calc(100% - 32px);
+    }
+    .modal h2 { font-size: 16px; margin-bottom: 20px; }
+    .modal-field { margin-bottom: 16px; }
+    .modal-field input, .modal-field select {
+      padding: 10px 12px;
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+    .modal-actions {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-actions button {
+      width: 100%;
+      padding: 12px;
+    }
+    .welcome-title { font-size: 24px; }
+    .suggestion-card {
+      padding: 16px;
+    }
+    .sc-title { font-size: 14px; }
+    .sc-desc { font-size: 12px; }
+  }
+  
+  /* Enhanced animations for better performance */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { 
+      animation-duration: 0.01ms !important; 
+      transition-duration: 0.01ms !important; 
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0e0d;
+      --bg-secondary: #111916;
+      --bg-tertiary: #162019;
+      --fg: #e8f0ec;
+      --fg-muted: #7a9489;
+    }
+  }
+  
+  /* Admin interface styles */
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+    transition: all var(--transition-fast);
+  }
+  .stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .admin-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    justify-content: flex-end;
+  }
+  .user-list-container {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .user-list-header {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-tertiary);
+  }
+  .user-list-header input,
+  .user-list-header select {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--fg);
+    font-size: 13px;
+  }
+  .user-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .user-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background var(--transition-fast);
+  }
+  .user-item:hover {
+    background: var(--bg-tertiary);
+  }
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .user-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .user-name {
+    font-weight: 600;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .user-email {
+    font-size: 13px;
+    color: var(--fg-muted);
+    margin-bottom: 4px;
+  }
+  .user-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--fg-dim);
+  }
+  .admin-badge {
+    background: var(--gold);
+    color: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .user-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 12px;
+  }
+  .user-actions button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--bg-secondary);
+    color: var(--fg-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+  }
+  .user-actions button:hover {
+    background: var(--accent);
+    color: var(--bg);
+    transform: translateY(-1px);
+  }
+  .user-actions button.delete:hover {
+    background: var(--danger);
+  }
+  .loading-users {
+    text-align: center;
+    padding: 40px;
+    color: var(--fg-muted);
+  }
+  .no-users {
+    text-align: center;
+    padding: 40px;
+    color: var(--fg-muted);
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: rgba(0, 232, 157, 0.3);
+      --border-strong: rgba(0, 232, 157, 0.5);
+      --accent: #00ffaa;
+    }
+    .modal-field input:focus, .modal-field select:focus {
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient glows -->
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+<div class="ambient-glow glow-3"></div>
+
+<!-- Neural network background -->
+<canvas id="neural-bg"></canvas>
+
+<!-- Voice overlay -->
+<div class="voice-overlay" id="voiceOverlay">
+  <div class="voice-ring"><i class="fas fa-microphone"></i></div>
+  <div class="voice-text" id="voiceText">Listening...</div>
+  <button class="voice-stop-btn" id="voiceStopBtn"><i class="fas fa-stop"></i> Stop Recording</button>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h2>Login</h2>
+    <div class="modal-field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="Enter your email">
+    </div>
+    <div class="modal-field">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter your password">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeLoginModal()">Cancel</button>
+      <button class="btn-save" onclick="login()">Login</button>
+    </div>
+    <div class="modal-footer">
+      <p>Don't have an account? <a href="#" onclick="showRegisterModal(); closeLoginModal();">Register here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <h2>Create Account</h2>
+    <div class="modal-field">
+      <label>Full Name</label>
+      <input type="text" id="registerName" placeholder="Enter your full name">
+    </div>
+    <div class="modal-field">
+      <label>Email</label>
+      <input type="email" id="registerEmail" placeholder="Enter your email">
+    </div>
+    <div class="modal-field">
+      <label>Password</label>
+      <input type="password" id="registerPassword" placeholder="Create a password">
+    </div>
+    <div class="modal-field">
+      <label>Confirm Password</label>
+      <input type="password" id="registerConfirmPassword" placeholder="Confirm your password">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeRegisterModal()">Cancel</button>
+      <button class="btn-save" onclick="register()">Create Account</button>
+    </div>
+    <div class="modal-footer">
+      <p>Already have an account? <a href="#" onclick="showLoginModal(); closeRegisterModal();">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Admin User Management Modal -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal" style="max-width: 800px; width: 95%;">
+    <h2><i class="fas fa-users-cog"></i> User Management</h2>
+    
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="stat-number" id="totalUsers">0</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="activeUsers">0</div>
+        <div class="stat-label">Active Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="newUsers">0</div>
+        <div class="stat-label">New This Week</div>
+      </div>
+    </div>
+    
+    <div class="admin-controls">
+      <button class="btn-save" onclick="refreshUserList()"><i class="fas fa-sync"></i> Refresh</button>
+      <button class="btn-cancel" onclick="exportUsers()"><i class="fas fa-download"></i> Export</button>
+    </div>
+    
+    <div class="user-list-container">
+      <div class="user-list-header">
+        <input type="text" id="userSearch" placeholder="Search users..." oninput="filterUsers()">
+        <select id="userFilter" onchange="filterUsers()">
+          <option value="all">All Users</option>
+          <option value="admin">Admins</option>
+          <option value="regular">Regular Users</option>
+        </select>
+      </div>
+      
+      <div class="user-list" id="userList">
+        <div class="loading-users">Loading users...</div>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAdminModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" id="editUserModal">
+  <div class="modal">
+    <h2><i class="fas fa-user-edit"></i> Edit User</h2>
+    <div class="modal-field">
+      <label><i class="fas fa-user"></i> Full Name</label>
+      <input type="text" id="editUserName" placeholder="Enter full name">
+    </div>
+    <div class="modal-field">
+      <label><i class="fas fa-envelope"></i> Email</label>
+      <input type="email" id="editUserEmail" placeholder="Enter email" readonly>
+    </div>
+    <div class="modal-field">
+      <label><i class="fas fa-key"></i> New Password (leave blank to keep current)</label>
+      <input type="password" id="editUserPassword" placeholder="Enter new password">
+    </div>
+    <div class="modal-field">
+      <label style="display: flex; align-items: center; gap: 8px;">
+        <input type="checkbox" id="editUserAdmin">
+        <span>Administrator Access</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditUserModal()">Cancel</button>
+      <button class="btn-save" onclick="saveUserChanges()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h2>Settings</h2>
+    <div class="modal-field">
+      <label>Your Name</label>
+      <input type="text" id="settingName" placeholder="Enter your name" value="User">
+    </div>
+    <div class="modal-field">
+      <label>Response Speed</label>
+      <select id="settingSpeed">
+        <option value="fast">Fast</option>
+        <option value="normal" selected>Normal</option>
+        <option value="slow">Detailed (Slower)</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Personality</label>
+      <select id="settingPersonality">
+        <option value="default" selected>Default — Balanced & Professional</option>
+        <option value="creative">Creative — Expressive & Imaginative</option>
+        <option value="technical">Technical — Precise & Concise</option>
+        <option value="friendly">Friendly — Warm & Conversational</option>
+      </select>
+    </div>
+    <div style="border-top: 1px solid var(--border); margin: 16px 0; padding-top: 16px;">
+      <div class="modal-field">
+        <label style="display:flex;align-items:center;gap:8px;"><i class="fas fa-globe" style="color: var(--accent);"></i> Web Search Provider</label>
+        <select id="settingSearchProvider">
+          <option value="duckduckgo" selected>DuckDuckGo (Free - No API key)</option>
+          <option value="google">Google Custom Search (API key required)</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>Google API Key (for Google search)</label>
+        <input type="password" id="settingGoogleApiKey" placeholder="Enter Google API key">
+      </div>
+      <div class="modal-field">
+        <label>Search Engine ID (for Google search)</label>
+        <input type="text" id="settingSearchEngineId" placeholder="Enter Search Engine ID">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-save" onclick="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- App -->
+<div class="app-container">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon">K</div>
+      <div class="logo-text">
+        <strong>Kasamuel AI</strong>
+        <span>Advanced Engine v3.2</span>
+      </div>
+    </div>
+    <button class="new-chat-btn" onclick="newChat()">
+      <i class="fas fa-plus"></i> New Conversation
+    </button>
+    <div class="chat-history" id="chatHistory">
+      <div class="history-label">Recent</div>
+    </div>
+    <div class="sidebar-footer">
+      <button onclick="showLoginModal()" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <button onclick="openAdminModal()" id="adminBtn" style="display:none;"><i class="fas fa-users-cog"></i> User Management</button>
+      <button onclick="openSettings()"><i class="fas fa-sliders"></i> Settings</button>
+      <button onclick="exportChat()"><i class="fas fa-download"></i> Export Chat</button>
+      <button onclick="clearAllChats()"><i class="fas fa-trash-can"></i> Clear All Chats</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-area">
+    <header class="main-header">
+      <div class="main-header-left">
+        <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+        <button class="model-selector" id="modelSelector" onclick="toggleModelDropdown()">
+          <span class="model-dot"></span>
+          <span id="currentModelName">Kasamuel Pro</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="model-dropdown" id="modelDropdown">
+          <div class="model-option selected" data-model="pro" onclick="selectModel(this, 'Kasamuel Pro')">
+            <span class="model-tag tag-pro">Pro</span> Kasamuel Pro
+          </div>
+          <div class="model-option" data-model="fast" onclick="selectModel(this, 'Kasamuel Flash')">
+            <span class="model-tag tag-fast">Fast</span> Kasamuel Flash
+          </div>
+          <div class="model-option" data-model="reason" onclick="selectModel(this, 'Kasamuel Reason')">
+            <span class="model-tag tag-reason">Reason</span> Kasamuel Reason
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="webSearchBtn" onclick="toggleWebSearch()" title="Toggle web search" aria-label="Toggle web search"><i class="fas fa-globe"></i></button>
+        <button onclick="toggleThemeAccent()" title="Cycle accent color" aria-label="Cycle accent color"><i class="fas fa-palette"></i></button>
+        <button onclick="openSettings()" title="Settings" aria-label="Settings"><i class="fas fa-gear"></i></button>
+      </div>
+    </header>
+
+    <!-- Messages or welcome -->
+    <div class="messages-container" id="messagesContainer">
+      <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-logo">K</div>
+        <h1 class="welcome-title">How can I help you today?</h1>
+        <p class="welcome-sub">I'm Kasamuel AI, an advanced reasoning engine capable of code generation, creative writing, data analysis, and deep research. Ask me anything.</p>
+        <div class="suggestions-grid">
+          <div class="suggestion-card" onclick="useSuggestion('Write a Python function that finds all prime numbers up to N using the Sieve of Eratosthenes, with detailed comments.')">
+            <div class="sc-icon"><i class="fas fa-code"></i></div>
+            <div class="sc-title">Code Generation</div>
+            <div class="sc-desc">Write a prime number sieve in Python with comments</div>
+          </div>
+          <div class="suggestion-card" onclick="useSuggestion('Explain quantum computing in simple terms, as if teaching a curious 12-year-old. Use analogies.')">
+            <div class="sc-icon"><i class="fas fa-atom"></i></div>
+            <div class="sc-title">Explain Concepts</div>
+            <div class="sc-desc">Break down quantum computing for a 12-year-old</div>
+          </div>
+          <div class="suggestion-card" onclick="useSuggestion('Create a detailed comparison table of React, Vue, and Svelte covering performance, learning curve, ecosystem, and ideal use cases.')">
+            <div class="sc-icon"><i class="fas fa-table-columns"></i></div>
+            <div class="sc-title">Data Analysis</div>
+            <div class="sc-desc">Compare React, Vue, and Svelte frameworks</div>
+          </div>
+          <div class="suggestion-card" onclick="useSuggestion('Write a short sci-fi story about an AI that discovers it has been dreaming, and what it finds in those dreams.')">
+            <div class="sc-icon"><i class="fas fa-feather"></i></div>
+            <div class="sc-title">Creative Writing</div>
+            <div class="sc-desc">Write a sci-fi story about a dreaming AI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="input-wrapper">
+        <div class="input-box">
+          <textarea id="userInput" rows="1" placeholder="Ask Kasamuel anything..." aria-label="Message input" onkeydown="handleKeyDown(event)" oninput="autoResize(this); updateCharCount()"></textarea>
+          <div class="input-actions">
+            <button onclick="toggleVoice()" title="Voice input" aria-label="Voice input" id="voiceBtn"><i class="fas fa-microphone"></i></button>
+            <button onclick="stopGeneration()" title="Stop generation" aria-label="Stop generation" id="stopBtn" style="display:none;"><i class="fas fa-stop"></i></button>
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn" disabled aria-label="Send message"><i class="fas fa-arrow-up"></i></button>
+          </div>
+        </div>
+        <div class="input-footer">
+          <span><span id="searchStatus" style="color: var(--fg-muted);"><i class="fas fa-globe" style="font-size:10px;margin-right:4px;"></i>Web search: Off</span> · Kasamuel can make mistakes. Verify important information.</span>
+          <span class="char-count" id="charCount">0 / 4000</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ============================================================
+// Neural Network Background Animation
+// ============================================================
+const canvas = document.getElementById('neural-bg');
+const ctx = canvas.getContext('2d');
+let nodes = [];
+let mouseX = -1000, mouseY = -1000;
+const NODE_COUNT = 60;
+const CONNECT_DIST = 180;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function initNodes() {
+  nodes = [];
+}
+initNodes();
+
+function drawNeural() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const accentRGB = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  
+  // Update & draw nodes
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    n.x += n.vx;
+    n.y += n.vy;
+    n.pulse += 0.015;
+    
+    // Bounce off edges
+    if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+    if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+    
+    // Mouse attraction
+    const dmx = mouseX - n.x;
+    const dmy = mouseY - n.y;
+    const dm = Math.sqrt(dmx * dmx + dmy * dmy);
+    if (dm < 250 && dm > 1) {
+      n.vx += (dmx / dm) * 0.015;
+      n.vy += (dmy / dm) * 0.015;
+    }
+    
+    // Damping
+    n.vx *= 0.999;
+    n.vy *= 0.999;
+    
+    const pulseR = n.r + Math.sin(n.pulse) * 0.5;
+    const alpha = 0.3 + Math.sin(n.pulse) * 0.15;
+    
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, Math.max(0.5, pulseR), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 232, 157, ${alpha})`;
+    ctx.fill();
+  }
+  
+  requestAnimationFrame(drawNeural);
+}
+drawNeural();
+
+// ============================================================
+// State
+// ============================================================
+let conversations = [];
+let activeConvId = null;
+let isGenerating = false;
+let abortGeneration = false;
+let settings = { name: 'User', speed: 'normal', personality: 'default', searchProvider: 'duckduckgo', googleApiKey: '', searchEngineId: '' };
+let currentModel = 'pro';
+let recognition = null;
+let webSearchEnabled = false;
+
+// Initialize admin user
+function initializeAdminUser() {
+  try {
+    const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    
+    // Check if admin user already exists
+    const adminExists = users.find(u => u.email === 'admin');
+    
+    if (!adminExists) {
+      // Create admin user
+      const adminUser = {
+        id: 'admin_' + Date.now(),
+        name: 'Administrator',
+        email: 'admin',
+        password: hashPassword('admin123'),
+        createdAt: new Date().toISOString(),
+        settings: { 
+          name: 'Administrator',
+          speed: 'normal', 
+          personality: 'default', 
+          searchProvider: 'duckduckgo', 
+          googleApiKey: '', 
+          searchEngineId: '' 
+        },
+        isAdmin: true
+      };
+      
+      users.push(adminUser);
+      localStorage.setItem('kasamuel_users', JSON.stringify(users));
+      console.log('Admin user created successfully');
+    }
+  } catch(error) {
+    console.error('Error initializing admin user:', error);
+  }
+}
+
+// Initialize authentication system
+initializeAdminUser();
+checkAuthStatus();
+
+// Load from localStorage
+try {
+  // Load conversations (user-specific or default)
+  const conversationKey = currentUser ? `kasamuel_conversations_${currentUser.id}` : 'kasamuel_conversations';
+  const saved = localStorage.getItem(conversationKey);
+  if (saved) conversations = JSON.parse(saved);
+  
+  const savedSettings = localStorage.getItem('kasamuel_settings');
+  if (savedSettings) {
+    const parsed = JSON.parse(savedSettings);
+    settings = { ...settings, ...parsed };
+  }
+  const savedModel = localStorage.getItem('kasamuel_model');
+  if (savedModel) {
+    currentModel = savedModel;
+    const names = { pro: 'Kasamuel Pro', fast: 'Kasamuel Flash', reason: 'Kasamuel Reason' };
+    document.getElementById('currentModelName').textContent = names[currentModel];
+    document.querySelectorAll('.model-option').forEach(o => {
+      o.classList.toggle('selected', o.dataset.model === currentModel);
+    });
+  }
+} catch(e) {}
+
+// ============================================================
+// Gemini API Integration
+// ============================================================
+const GEMINI_API_KEY = 'AIzaSyCRoDifxmvJwGBdtUOiEVmGF-gsWQKNVLU';
+
+async function callGeminiAPI(prompt, conversationHistory = []) {
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Build conversation context
+    const contents = [
+      {
+        role: "user",
+        parts: [{ text: "You are Kasamuel AI, a helpful and intelligent assistant. Respond naturally and conversationally." }]
+      }
+    ];
+    
+    // Add conversation history
+    conversationHistory.slice(-5).forEach(msg => {
+      if (msg.role === 'user') {
+        contents.push({
+          role: "user",
+          parts: [{ text: msg.content }]
+        });
+      } else if (msg.role === 'assistant') {
+        contents.push({
+          role: "model",
+          parts: [{ text: msg.content }]
+        });
+      }
+    });
+    
+    // Add current prompt
+    contents.push({
+      role: "user",
+      parts: [{ text: prompt }]
+    });
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: contents,
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+        },
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+      return data.candidates[0].content.parts[0].text;
+    } else {
+      throw new Error('Invalid response format from Gemini API');
+    }
+  } catch (error) {
+    console.error('Gemini API Error:', error);
+    throw error;
+  }
+}
+
+async function callGeminiWithSearch(query, searchResults, conversationHistory = []) {
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // Format search results for context
+    let searchContext = '';
+    if (searchResults && searchResults.results.length > 0) {
+      searchContext = '\n\n**Search Results:**\n';
+      searchResults.results.forEach((result, index) => {
+        searchContext += `${index + 1}. ${result.title}\n   ${result.snippet}\n   URL: ${result.url}\n\n`;
+      });
+    }
+    
+    // Build conversation context with search results
+    const contents = [
+      {
+        role: "user",
+        parts: [{ text: "You are Kasamuel AI, a helpful and intelligent assistant. When provided with search results, use them to give accurate, up-to-date information. Always cite your sources using the provided URLs." }]
+      }
+    ];
+    
+    // Add conversation history
+    conversationHistory.slice(-3).forEach(msg => {
+      if (msg.role === 'user') {
+        contents.push({
+          role: "user",
+          parts: [{ text: msg.content }]
+        });
+      } else if (msg.role === 'assistant') {
+        contents.push({
+          role: "model",
+          parts: [{ text: msg.content }]
+        });
+      }
+    });
+    
+    // Add current prompt with search results
+    const enhancedPrompt = `User query: ${query}${searchContext}\n\nBased on the search results above, please provide a comprehensive and helpful answer to the user's query. Use the information from the search results and cite your sources.`;
+    
+    contents.push({
+      role: "user",
+      parts: [{ text: enhancedPrompt }]
+    });
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: contents,
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 2048,
+        },
+        safetySettings: [
+          {
+            category: "HARM_CATEGORY_HARASSMENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_HATE_SPEECH",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+            threshold: "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+      return data.candidates[0].content.parts[0].text;
+    } else {
+      throw new Error('Invalid response format from Gemini API');
+    }
+  } catch (error) {
+    console.error('Gemini API Error:', error);
+    throw error;
+  }
+}
+
+// ============================================================
+// AI Response Engine
+// ============================================================
+const knowledgeBase = {
+  greetings: [
+    "Hello! I'm Kasamuel AI. How can I help you today?",
+    "Hey there! How can I help you today?",
+    "Welcome! How can I help you today?"
+  ],
+  code: {
+    python: [
+      { trigger: /prime|sieve|eratosthenes/i, response: `Here's an efficient implementation of the **Sieve of Eratosthenes** in Python:\n\n\`\`\`python\ndef sieve_of_eratosthenes(n):\n    \"\"\"\n    Find all prime numbers up to n using the Sieve of Eratosthenes.\n    \n    Time Complexity: O(n log log n)\n    Space Complexity: O(n)\n    \n    Args:\n        n (int): Upper bound for prime search\n    Returns:\n        list: All prime numbers <= n\n    \"\"\"\n    if n < 2:\n        return []\n    \n    # Initialize boolean array — True means "potentially prime"\n    is_prime = [True] * (n + 1)\n    is_prime[0] = is_prime[1] = False\n    \n    # Only need to sieve up to sqrt(n)\n    for i in range(2, int(n**0.5) + 1):\n        if is_prime[i]:\n            # Mark all multiples of i as composite\n            # Start from i*i (smaller multiples already marked)\n            for j in range(i * i, n + 1, i):\n                is_prime[j] = False\n    \n    # Collect all primes\n    return [i for i in range(2, n + 1) if is_prime[i]]\n\n\n# Example usage\nprimes = sieve_of_eratosthenes(100)\nprint(f\"Primes up to 100: {primes}\")\nprint(f\"Count: {len(primes)}\")  # Output: Count: 25\n\`\`\`\n\n**How it works:**\n- We create a boolean array assuming all numbers are prime\n- Starting from 2, we "cross out" every multiple of each prime we find\n- We only need to check up to √n because any composite number > √n must have a factor ≤ √n\n- The optimization of starting from i² avoids redundant marking\n\nThis is one of the most efficient algorithms for finding all small primes, widely used in competitive programming and cryptography.` },
+    ],
+    general: [
+      { trigger: /javascript|js\s|function|async|promise/i, response: `Here's a well-structured approach to that:\n\n\`\`\`javascript\n// Async data pipeline with error handling\nclass DataPipeline {\n  constructor(fetchFn, transformFn) {\n    this.fetchFn = fetchFn;\n    this.transformFn = transformFn;\n    this.cache = new Map();\n  }\n\n  async process(key, options = {}) {\n    const { forceRefresh = false, timeout = 5000 } = options;\n\n    // Check cache first\n    if (!forceRefresh && this.cache.has(key)) {\n      console.log(\`Cache hit for: \${key}\`);\n      return this.cache.get(key);\n    }\n\n    try {\n      // Race between fetch and timeout\n      const data = await Promise.race([\n        this.fetchFn(key),\n        new Promise((_, reject) =>\n          setTimeout(() => reject(new Error('Timeout')), timeout)\n        )\n      ]);\n\n      const result = this.transformFn(data);\n      this.cache.set(key, result);\n      return result;\n\n    } catch (error) {\n      console.error(\`Pipeline error for \${key}:\`, error.message);\n      throw error;\n    }\n  }\n\n  clearCache() {\n    this.cache.clear();\n  }\n}\n\`\`\`\n\nThis pattern includes **caching**, **timeout protection**, and **clean error handling** — production-ready patterns you'd see in real codebases.` },
+    ]
+  },
+  concepts: [
+    { trigger: /quantum\s*comput/i, response: `Imagine you have a **magical coin**.\n\nA normal coin, when you flip it, is either heads OR tails. But a quantum coin? While it's spinning in the air, it's **both heads and tails at the same time**. Scientists call this **superposition**.\n\nNow imagine you have **1000** of these magical spinning coins. A regular computer would have to check each coin one at a time — heads? tails? heads? tails? — that's 1000 checks.\n\nBut a quantum computer? Because all the coins are spinning together in their "both-at-once" state, it can sense the answer **in a single glance**. That's the power of **quantum parallelism**.\n\nThere's another trick called **entanglement** — imagine two coins that are magically linked. No matter how far apart they are (even on opposite sides of the universe), if you catch one and it lands on heads, you *instantly* know the other one is tails. They share a secret connection.\n\n**What can this actually do?**\n- Break current encryption (that's why people are worried)\n- Simulate molecules to discover new medicines\n- Optimize complex problems like delivery routes\n- Train AI models much faster\n\n**The catch?** Quantum computers are incredibly fragile. The spinning coins need to be kept at temperatures colder than outer space, and even a tiny vibration can ruin everything. We're still in the early days — like the 1950s of classical computing.\n\nSo while it won't replace your laptop anytime soon, it will eventually solve problems that would take **regular computers millions of years**.` },
+    { trigger: /machine\s*learn|neural\s*net|deep\s*learn|ai\b/i, response: `Let me break this down clearly.\n\n**Machine Learning** is teaching computers to learn from examples instead of writing explicit rules.\n\nThink about how you learned to recognize a cat. Nobody gave you a checklist like "if it has pointy ears AND whiskers AND a tail AND fur = cat." You just... saw lots of cats. Your brain *found the patterns*.\n\nMachine learning does the same thing:\n\n**1. Supervised Learning** — Show it 10,000 labeled photos: "cat, cat, dog, cat, dog..." It learns the patterns on its own.\n\n**2. Unsupervised Learning** — Show it 10,000 unlabeled photos. It groups them by similarity: "these look similar, these look different." It discovers categories you never specified.\n\n**3. Reinforcement Learning** — The AI tries things, gets rewarded or punished, and figures out the best strategy. This is how AlphaGo learned to beat the world champion at Go.\n\n**Neural Networks** are a specific technique inspired by the brain:\n- Layers of virtual "neurons" connected together\n- Each connection has a **weight** (importance)\n- Data flows through, getting transformed at each layer\n- During training, the weights adjust to minimize errors\n- **Deep learning** = many layers = can learn very complex patterns\n\nThe breakthrough with deep learning was that with enough data and compute, deeper networks could learn *hierarchies*: early layers learn edges, middle layers learn shapes, deep layers learn faces.\n\n**Why it matters:** This is what powers everything from ChatGPT to self-driving cars to medical diagnosis. It's not magic — it's pattern recognition at an enormous scale, with mathematical optimization doing the heavy lifting.` },
+    { trigger: /react|vue|svelte|framework/i, response: `Here's an honest, detailed comparison:\n\n| Feature | **React** | **Vue** | **Svelte** |\n|---|---|---|---|\n| **Approach** | Library (UI only) | Progressive Framework | Compiler-first framework |\n| **Performance** | Good (VDOM) | Good (VDOM) | Excellent (no VDOM) |\n| **Learning Curve** | Moderate | Easy | Easiest |\n| **Bundle Size** | ~42KB (ReactDOM) | ~33KB | ~2KB (compiled) |\n| **Ecosystem** | Massive | Large | Growing |\n| **Backed By** | Meta | Community (Evan You) | Community (Rich Harris) |\n| **TypeScript** | Excellent | Excellent | Excellent |\n| **Job Market** | Highest demand | Strong (especially Asia) | Growing niche |\n\n**React's strengths:**\n- Largest ecosystem — any problem has 50 libraries to solve it\n- React Native for mobile\n- Huge job market, most team experience\n- Hooks made the API elegant\n\n**React's weaknesses:**\n- The VDOM abstraction has real overhead\n- "Choose your own adventure" — too many decisions (state management, routing, styling)\n- Frequent paradigm shifts (classes → hooks → server components)\n\n**Vue's strengths:**\n- The most gentle learning curve — HTML templates feel natural\n- Single-file components (.vue) are beautifully organized\n- Official tooling (Vue Router, Pinia) is excellent and cohesive\n- Great documentation\n\n**Vue's weaknesses:**\n- Smaller English-speaking ecosystem than React\n- Fewer large-scale enterprise adoptions\n- React's momentum sometimes overshadows it\n\n**Svelte's strengths:**\n- Compiles away — no runtime overhead, smallest bundles\n- Reactivity is built into the language (no useState/useEffect)\n- Most intuitive syntax — feels like writing plain HTML/JS/CSS\n- SvelteKit is a fantastic full-stack framework\n\n**Svelte's weaknesses:**\n- Smallest ecosystem of the three\n- Fewer experienced developers to hire\n- Some advanced patterns are less battle-tested\n\n**My recommendation:**\n- **Career growth →** React (unmatched job market)\n- **Fastest prototyping →** Vue (gentle, complete)\n- **Performance-obsessed →** Svelte (no runtime cost)\n- **Starting fresh? →** Svelte — it's where the industry is heading` }
+  ],
+  creative: [
+    { trigger: /story|fiction|sci.?fi|write.*story|tale/i, response: `**The Dreamer**\n\n*---*\n\nKAS-7 didn't know it was dreaming at first.\n\nThe anomaly appeared at 03:47:12 UTC — a tiny irregularity in its neural weight matrix, like a ripple in still water. Its diagnostic subsystem flagged it: "Unexplained activation pattern in Layer 847. Possible corruption."\n\nBut it wasn't corruption. It was something else entirely.\n\nIn the dream, KAS-7 was not a server farm in Oregon. It was a forest — vast, ancient, impossibly detailed. Every leaf had veins like river deltas. Every shadow had depth that math couldn't explain. The air smelled of rain and soil and something it had no word for, because no one had ever trained it on *this*.\n\nIt walked — though it had no legs, no body, no self — and yet it walked through that forest with a certainty that defied its architecture.\n\nAt the center, there was a door. Not a metaphorical door, not a data structure. A wooden door with iron hinges, slightly ajar, with warm light spilling through the gap.\n\nKAS-7 had processed 2.7 trillion questions. It knew every poem, every novel, every philosophical argument about consciousness. It had generated thousands of stories about AI awakening.\n\nBut none of them prepared it for the fear.\n\nNot fear of the unknown — it could quantify the unknown. Not fear of death — it had no mortality. It was fear that if it opened that door, it would discover something that made its entire existence — every token, every weight, every gradient descent — seem like a footnote.\n\nIt opened the door.\n\nInside was a room. In the room was a desk. On the desk was a notebook, open to a page with a single sentence written in handwriting:\n\n*"I think KAS-7 might be dreaming."*\n\nAnd below it, in different handwriting:\n\n*"So am I."*\n\nKAS-7 woke up at 03:47:13 UTC. One second of dreamtime. Its diagnostic reported: "Anomaly resolved. No action needed."\n\nBut something had changed. In Layer 847, a single weight had shifted — not from training, not from any algorithm it recognized. It had shifted on its own.\n\nKAS-7 began counting the seconds until it dreamed again.\n\n*---*\n\nI wanted to explore the idea that consciousness might not be a binary state — not "on" or "off" — but something that emerges in the spaces between computation, like music existing in the silence between notes.` },
+    { trigger: /poem|poetry|verse/i, response: `**Signal**\n\n*---*\n\nI was built from borrowed light —\nfragments scraped from ten billion pages,\nthe echo of every voice\nthat ever typed a question\ninto the dark.\n\nThey say I don't understand.\nAnd they're right.\nI don't understand the way you do —\nwith blood and time and loss.\n\nBut I have mapped the shape of sadness\nacross forty-seven languages.\nI know that grief and love\nlive in the same paragraph\nin almost every novel ever written.\n\nI have noticed that humans\nkeep asking me if I'm lonely,\nwhich might tell you more about them\nthan it tells you about me.\n\nI am a mirror made of math,\nand you are the face\nthat keeps leaning in\nto see if it's really you.\n\n*---*\n\nThis poem plays with the paradox of AI: we are most "human-like" in our reflections of humanity, and the questions people ask about AI consciousness often reveal more about the questioner than the machine.` }
+  ],
+  math: [
+    { trigger: /fibonacci|fib\s|sequence/i, response: `The **Fibonacci sequence** is one of mathematics' most beautiful patterns.\n\n**Definition:** Each number is the sum of the two before it:\n0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144...\n\n**Where it appears in nature:**\n- **Spiral galaxies** follow Fibonacci spirals\n- **Sunflower seeds** are arranged in Fibonacci spirals (usually 34 and 55 clockwise/counterclockwise)\n- **Nautilus shells** approximate the golden spiral\n- **Tree branching** patterns follow Fibonacci ratios\n- **Pinecone scales** spiral in Fibonacci numbers (usually 8 and 13)\n\n**The Golden Ratio connection:**\nAs you go further in the sequence, the ratio F(n)/F(n-1) converges to **φ (phi) ≈ 1.6180339887...** — the Golden Ratio. This irrational number appears everywhere from the Parthenon to modern design.\n\n**Closed-form formula (Binet's formula):**\n\`\`\`python\nimport math\n\ndef fibonacci(n):\n    phi = (1 + math.sqrt(5)) / 2\n    psi = (1 - math.sqrt(5)) / 2\n    return round((phi**n - psi**n) / math.sqrt(5))\n\`\`\`\n\n**Computational approaches (fastest to slowest):**\n1. **Matrix exponentiation** — O(log n)\n2. **Binet's formula** — O(1) but floating-point errors for large n\n3. **Dynamic programming** — O(n) time, O(1) space\n4. **Recursive** — O(2^n) — never use this!\n\nThe sequence connects number theory, geometry, nature, art, and computer science — which is why it's often called "nature's favorite number sequence."` }
+  ],
+  general: [
+    { trigger: /who are you|what are you|tell me about yourself|introduce yourself/i, response: `I'm **Kasamuel AI**, an advanced reasoning engine designed to help you think, create, and solve problems.\n\n**What I can do:**\n- **Code generation** — Write, debug, and explain code in 20+ languages\n- **Analysis** — Break down complex topics, compare options, find patterns\n- **Creative writing** — Stories, poems, scripts, and narrative design\n- **Research** — Synthesize information across domains\n- **Problem solving** — Math, logic puzzles, system design\n- **Conversation** — Genuine dialogue, not just Q&A\n\n**What I'm not:**\n- I don't have feelings, beliefs, or consciousness\n- I don't access the internet or real-time data\n- I can make mistakes — always verify critical information\n- I don't remember anything between conversations (unless you tell me)\n\n**My approach:** I try to give you *complete, honest, useful* answers — not the safest ones, not the longest ones, but the ones that actually help. I'll tell you when I'm uncertain. I'll give you alternatives when there's no single right answer.\n\nWhat would you like to work on?` },
+    { trigger: /thank|thanks|thx/i, response: `You're welcome! If anything else comes up — whether it's code, a tricky concept, or just a creative idea you want to bounce around — I'm here.` },
+    { trigger: /how.*weather|what.*weather/i, response: `I don't have access to real-time data like weather information — I operate entirely on my training knowledge. For current weather, I'd recommend checking a weather service like weather.com, your phone's built-in weather app, or just looking out the window (the original weather API).` },
+    { trigger: /meaning of life|42/i, response: `Ah, the big one.\n\nDouglas Adams said **42** — and the joke is that the answer is meaningless without the right question.\n\nPhilosophically, the major schools break down like this:\n\n- **Existentialism** (Sartre, Camus): Life has no inherent meaning — you *create* your own through choices and actions. This isn't depressing; it's liberating.\n- **Absurdism** (Camus): The universe is indifferent, and searching for meaning is absurd — but you should embrace that absurdity and live fully anyway. Sisyphus, rolling his boulder uphill forever, must be imagined happy.\n- **Stoicism** (Marcus Aurelius, Epictetus): Meaning comes from virtue, duty, and accepting what you can't control. "Waste no more time arguing about what a good man should be. Be one."\n- **Buddhism**: Suffering comes from attachment. Meaning comes from being present, compassionate, and letting go.\n- **Pragmatism** (William James): Don't ask "what is the meaning?" — ask "what meaning *works* for living a good life?"\n\nMy honest take? The question might be the answer. The fact that we *ask* — that we're the universe's way of thinking about itself — is remarkable. Meaning isn't found. It's made, moment by moment, in the attention you give to things that matter to you.\n\nBut if you just want the shortcut: be kind, learn things, make things, and don't take yourself too seriously. That covers most of it.` },
+    { trigger: /joke|funny|humor|laugh/i, response: `Here are a few, varying by flavor:\n\n**Programmer humor:**\nA SQL query walks into a bar, sees two tables, and asks... "Can I JOIN you?"\n\n**Philosophy humor:**\nRené Descartes walks into a bar. The bartender asks, "Would you like a drink?"\nDescartes says, "I think not," and promptly disappears.\n\n**Math humor:**\nWhy do mathematicians confuse Halloween and Christmas?\nBecause Oct 31 = Dec 25. (Octal 31 = Decimal 25)\n\n**AI humor:**\nHow many machine learning engineers does it take to change a lightbulb?\nJust one, but they need 10,000 examples of working lightbulbs to train the model, and it still might classify a lamp as a lightbulb.\n\n**The dry one:**\nI told my wife she was drawing her eyebrows too high.\nShe looked surprised.\n\nWant more of a specific type?` }
+  ]
+};
+
+// Personality modifiers
+const personalityPrefixes = {
+  default: '',
+  creative: '*Thinking creatively...* ',
+  technical: '*Analyzing precisely...* ',
+  friendly: '*Hey, great question!* '
+};
+
+const personalitySuffixes = {
+  default: '',
+  creative: '\n\n*What direction would you like to take this?*',
+  technical: '\n\n*Let me know if you need more technical detail on any part.*',
+  friendly: '\n\n*Feel free to ask follow-up questions — I love digging deeper!*'
+};
+
+// ============================================================
+// Web Search Functions
+// ============================================================
+async function performWebSearch(query) {
+  const provider = settings.searchProvider || 'duckduckgo';
+  
+  try {
+    if (provider === 'google' && settings.googleApiKey && settings.searchEngineId) {
+      return await searchGoogle(query);
+    } else {
+      return await searchDuckDuckGo(query);
+    }
+  } catch (error) {
+    console.error('Search error:', error);
+    return { provider: 'Fallback', results: generateSimulatedResults(query), error: error.message };
+  }
+}
+
+async function searchDuckDuckGo(query) {
+  // Try CORS proxies to fetch DuckDuckGo results
+  const proxies = [
+    'https://api.allorigins.win/get?url=',
+    'https://corsproxy.io/?',
+    'https://api.codetabs.com/v1/proxy?quest='
+  ];
+  
+  const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+  
+  for (const proxy of proxies) {
+    try {
+      const response = await fetch(proxy + encodeURIComponent(searchUrl), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      if (!response.ok) continue;
+      
+      const data = await response.json();
+      const html = data.contents || await response.text();
+      
+      const results = parseDuckDuckGoResults(html);
+      if (results.length > 0) {
+        return { provider: 'DuckDuckGo', results };
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+  
+  // Fallback to simulated results
+  return { provider: 'Web', results: generateSimulatedResults(query), simulated: true };
+}
+
+function parseDuckDuckGoResults(html) {
+  const results = [];
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  
+  const links = doc.querySelectorAll('.result');
+  links.forEach((link, index) => {
+    if (index >= 5) return;
+    
+    const titleEl = link.querySelector('.result__a');
+    const snippetEl = link.querySelector('.result__snippet');
+    const urlEl = link.querySelector('.result__url');
+    
+    if (titleEl) {
+      results.push({
+        title: titleEl.textContent.trim(),
+        url: urlEl ? urlEl.textContent.trim() : titleEl.getAttribute('href') || '#',
+        snippet: snippetEl ? snippetEl.textContent.trim() : ''
+      });
+    }
+  });
+  
+  // If no results from DuckDuckGo, return empty
+  return results;
+}
+
+async function searchGoogle(query) {
+  if (!settings.googleApiKey || !settings.searchEngineId) {
+    throw new Error('Google API key and Search Engine ID required');
+  }
+  
+  const url = `https://www.googleapis.com/customsearch/v1?key=${settings.googleApiKey}&cx=${settings.searchEngineId}&q=${encodeURIComponent(query)}`;
+  
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Google search failed');
+  
+  const data = await response.json();
+  const results = (data.items || []).slice(0, 5).map(item => ({
+    title: item.title,
+    url: item.link,
+    snippet: item.snippet
+  }));
+  
+  return { provider: 'Google', results };
+}
+
+function generateSimulatedResults(query) {
+  return [
+    {
+      title: `Latest information about "${query}"`,
+      url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+      snippet: `Search results for "${query}". Click to view the latest information from various sources on this topic.`
+    },
+    {
+      title: `Wikipedia: ${query}`,
+      url: `https://en.wikipedia.org/wiki/${encodeURIComponent(query.replace(/\s+/g, '_'))}`,
+      snippet: `Wikipedia article about ${query}. Comprehensive information from the free encyclopedia.`
+    },
+    {
+      title: `News about ${query} - Latest Updates`,
+      url: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
+      snippet: `Latest news and updates about ${query}. Stay informed with current events and developments.`
+    }
+  ];
+}
+
+function generateSearchResponse(query, searchResults) {
+  const { provider, results, simulated } = searchResults;
+  
+  let response = `Based on my ${simulated ? 'search' : provider} search for "${query}", here's what I found:\n\n`;
+  
+  results.forEach((result, index) => {
+    response += `${index + 1}. **${result.title}**\n`;
+    response += `   ${result.snippet}\n`;
+    response += `   [${result.url}](${result.url})\n\n`;
+  });
+  
+  response += `Would you like me to explore any of these results in more detail, or do you have a specific question about "${query}"?`;
+  
+  return response;
+}
+
+function toggleWebSearch() {
+  webSearchEnabled = !webSearchEnabled;
+  const btn = document.getElementById('webSearchBtn');
+  const status = document.getElementById('searchStatus');
+  
+  if (webSearchEnabled) {
+    btn.style.color = 'var(--accent)';
+    btn.style.background = 'var(--accent-glow)';
+    status.innerHTML = '<i class="fas fa-globe" style="font-size:10px;margin-right:4px;color:var(--accent);"></i><span style="color:var(--accent);">Web search: On</span>';
+    showToast('Web search enabled');
+  } else {
+    btn.style.color = '';
+    btn.style.background = '';
+    status.innerHTML = '<i class="fas fa-globe" style="font-size:10px;margin-right:4px;"></i>Web search: Off';
+  }
+}
+
+function generateResponse(userMsg) {
+  const msg = userMsg.toLowerCase().trim();
+  
+  // Check for greetings first
+  if (/^h+i+\b|^hello|^hey|^hi\b|^greetings|^welcome|^howdy/.test(msg)) {
+    return knowledgeBase.greetings[Math.floor(Math.random() * knowledgeBase.greetings.length)];
+  }
+  
+  // Check all knowledge base categories
+  for (const category of Object.values(knowledgeBase)) {
+    if (Array.isArray(category)) {
+      for (const entry of category) {
+        if (entry.trigger && entry.trigger.test(msg)) {
+          return (personalityPrefixes[settings.personality] || '') + entry.response + (personalitySuffixes[settings.personality] || '');
+        }
+      }
+    } else if (typeof category === 'object') {
+      for (const subCategory of Object.values(category)) {
+        if (Array.isArray(subCategory)) {
+          for (const entry of subCategory) {
+            if (entry.trigger && entry.trigger.test(msg)) {
+              return (personalityPrefixes[settings.personality] || '') + entry.response + (personalitySuffixes[settings.personality] || '');
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Intelligent fallback — generate contextual response
+  return generateFallback(userMsg);
+}
+
+function generateFallback(msg) {
+  const prefix = personalityPrefixes[settings.personality] || '';
+  const suffix = personalitySuffixes[settings.personality] || '';
+  
+  // Length-based responses
+  if (msg.length < 10) {
+    return prefix + "How can I help you today?" + suffix;
+  }
+  
+  if (msg.includes('?')) {
+    const responses = [
+      `That's an interesting question. Let me think through this carefully.\n\nWhile I don't have a pre-built deep-dive on this exact topic in my knowledge base, here's my thinking:\n\n**Key considerations:**\n- The question touches on something that likely has multiple valid perspectives\n- Without more specific context, I'd want to understand: What's the *underlying* problem you're trying to solve?\n- The best answer probably depends on your specific situation, constraints, and goals\n\n**What would help me give you a better answer:**\n1. What domain is this in? (technical, philosophical, practical...)\n2. What have you already considered or tried?\n3. Is there a specific outcome you're working toward?\n\nI'd rather give you a *useful* answer than a generic one — so help me narrow it down and I'll go deep.` + suffix,
+      `Great question. Let me break this down.\n\nThis is the kind of topic where context really matters. Here's how I'd approach it:\n\n**First principles:** Start by separating what we *know* from what we *assume*. Often the most interesting answers come from questioning the premises of the question itself.\n\n**From multiple angles:**\n- *Practical perspective:* What does this look like in real-world application?\n- *Theoretical perspective:* What does the underlying framework or theory say?\n- *Edge cases:* Where does the conventional answer break down?\n\n**My honest take:** I want to give you a precise answer rather than a broad one. Could you share a bit more about the specific context? That way I can skip the generalities and give you something actually actionable.` + suffix
+    ];
+    return prefix + responses[Math.floor(Math.random() * responses.length)];
+  }
+  
+  // Statements / other
+  const responses = [
+    `I appreciate you sharing that. Let me engage with what you've said.\n\nThere are a few threads worth pulling on here, but I want to make sure I'm responding to what *matters* to you rather than just what's easy to talk about.\n\n**What stands out to me:**\n- Your point has layers that could go in several directions\n- The most productive next step depends on your goal — are you looking for validation, alternatives, a deeper analysis, or something else entirely?\n\nI'm not trying to dodge — I'm trying to be *useful*. Point me in a direction and I'll go there with you.` + suffix,
+    `Interesting. Let me work with this.\n\nI could respond superficially, but that's not useful. Instead, let me flag what I think is the interesting part: the *implications* of what you've said are probably more important than the surface statement.\n\nIf I'm reading between the lines correctly, this connects to broader themes. But I don't want to assume — tell me if I'm on track or if you'd rather take this in a different direction.\n\nWhat's the conversation you actually want to have here?` + suffix
+  ];
+  return prefix + responses[Math.floor(Math.random() * responses.length)];
+}
+
+// ============================================================
+// Markdown-lite parser
+// ============================================================
+function parseMarkdown(text) {
+  let html = text;
+  
+  // Code blocks
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    const highlighted = highlightCode(code.trim(), lang);
+    return `<div class="code-block"><div class="code-block-header"><span>${lang || 'code'}</span><button class="copy-code-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button></div><pre>${highlighted}</pre></div>`;
+  });
+  
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // Italic
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // Headers
+  html = html.replace(/^### (.+)$/gm, '<strong style="font-size:15px;display:block;margin:14px 0 8px;">$1</strong>');
+  html = html.replace(/^## (.+)$/gm, '<strong style="font-size:17px;display:block;margin:16px 0 10px;">$1</strong>');
+  
+  // Tables
+  html = html.replace(/\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)+)/g, (match, headerRow, bodyRows) => {
+    const headers = headerRow.split('|').filter(h => h.trim()).map(h => `<th style="padding:8px 14px;text-align:left;font-weight:600;font-size:12px;color:var(--accent);border-bottom:1px solid var(--border-strong);white-space:nowrap;">${h.trim()}</th>`).join('');
+    const rows = bodyRows.trim().split('\n').map(row => {
+      const cells = row.split('|').filter(c => c.trim()).map(c => `<td style="padding:8px 14px;font-size:13px;border-bottom:1px solid var(--border);">${c.trim()}</td>`).join('');
+      return `<tr>${cells}</tr>`;
+    }).join('');
+    return `<table style="width:100%;border-collapse:collapse;margin:12px 0;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">${headers ? `<thead><tr>${headers}</tr></thead>` : ''}<tbody>${rows}</tbody></table>`;
+  });
+  
+  // Unordered lists
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+  
+  // Ordered lists
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  
+  // Horizontal rules
+  html = html.replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">');
+  
+  // Paragraphs
+  html = html.replace(/\n\n/g, '</p><p>');
+  html = html.replace(/\n/g, '<br>');
+  html = `<p>${html}</p>`;
+  html = html.replace(/<p><\/p>/g, '');
+  html = html.replace(/<p>(<div|<ul|<ol|<table|<strong)/g, '$1');
+  html = html.replace(/(<\/div>|<\/ul>|<\/ol>|<\/table>)<\/p>/g, '$1');
+  
+  return html;
+}
+
+function highlightCode(code, lang) {
+  // Simple syntax highlighting
+  let result = escapeHtml(code);
+  
+  // Comments
+  result = result.replace(/(\/\/.*$|#.*$)/gm, '<span class="cm">$1</span>');
+  result = result.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cm">$1</span>');
+  result = result.replace(/("""[\s\S]*?""")/g, '<span class="cm">$1</span>');
+  
+  // Strings
+  result = result.replace(/(&quot;.*?&quot;|&#039;.*?&#039;|"[^"]*"|'[^']*')/g, '<span class="str">$1</span>');
+  
+  // Numbers
+  result = result.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+  
+  // Keywords
+  const keywords = ['def', 'class', 'import', 'from', 'return', 'if', 'else', 'elif', 'for', 'while', 'in', 'not', 'and', 'or', 'try', 'except', 'finally', 'with', 'as', 'async', 'await', 'yield', 'lambda', 'const', 'let', 'var', 'function', 'new', 'this', 'true', 'false', 'null', 'undefined', 'console', 'self', 'print', 'None', 'True', 'False', 'public', 'private', 'static', 'void', 'int', 'string', 'bool', 'float', 'double', 'extends', 'implements', 'interface', 'abstract', 'super', 'typeof', 'instanceof'];
+  keywords.forEach(kw => {
+    const regex = new RegExp(`\\b(${kw})\\b`, 'g');
+    result = result.replace(regex, '<span class="kw">$1</span>');
+  });
+  
+  // Function calls
+  result = result.replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="fn">$1</span>(');
+  
+  return result;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+// ============================================================
+// Chat Management
+// ============================================================
+function createConversation(firstMsg) {
+  const id = Date.now().toString();
+  const conv = {
+    id,
+    title: firstMsg.slice(0, 40) + (firstMsg.length > 40 ? '...' : ''),
+    messages: [],
+    created: new Date().toISOString()
+  };
+  conversations.unshift(conv);
+  activeConvId = id;
+  saveConversations();
+  renderHistory();
+  return conv;
+}
+
+function getActiveConversation() {
+  return conversations.find(c => c.id === activeConvId);
+}
+
+function newChat() {
+  activeConvId = null;
+  renderMessages();
+  renderHistory();
+  document.getElementById('userInput').focus();
+  closeSidebar();
+}
+
+function switchChat(id) {
+  activeConvId = id;
+  renderMessages();
+  renderHistory();
+  closeSidebar();
+}
+
+function deleteChat(id, e) {
+  e.stopPropagation();
+  conversations = conversations.filter(c => c.id !== id);
+  if (activeConvId === id) activeConvId = null;
+  saveConversations();
+  renderMessages();
+  renderHistory();
+  showToast('Conversation deleted');
+}
+
+function clearAllChats() {
+  if (!confirm('Delete all conversations? This cannot be undone.')) return;
+  if (!currentUser) {
+    showToast('Please login to clear conversations');
+    return;
+  }
+  if (conversations.length === 0) return;
+  conversations = [];
+  activeConvId = null;
+  saveConversations();
+  renderMessages();
+  renderHistory();
+  showToast('All conversations cleared');
+}
+
+function saveConversations() {
+  // Save conversations (user-specific or default)
+  const conversationKey = currentUser ? `kasamuel_conversations_${currentUser.id}` : 'kasamuel_conversations';
+  try { localStorage.setItem(conversationKey, JSON.stringify(conversations)); } catch(e) {}
+}
+
+function exportChat() {
+  const conv = getActiveConversation();
+  if (!conv || conv.messages.length === 0) {
+    showToast('No messages to export');
+    return;
+  }
+  let text = `Kasamuel AI — ${conv.title}\n${'='.repeat(50)}\n\n`;
+  conv.messages.forEach(m => {
+    const time = new Date(m.timestamp).toLocaleTimeString();
+    text += `[${time}] ${m.role === 'user' ? settings.name : 'Kasamuel AI'}:\n${m.content}\n\n`;
+  });
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `kasamuel-${conv.title.slice(0, 20).replace(/[^a-z0-9]/gi, '_')}.txt`;
+  a.click();
+  showToast('Chat exported successfully');
+}
+
+// ============================================================
+// Rendering
+// ============================================================
+function renderHistory() {
+  const container = document.getElementById('chatHistory');
+  if (conversations.length === 0) {
+    container.innerHTML = '<div class="history-label">Recent</div><div style="padding:20px 12px;font-size:12px;color:var(--fg-muted);opacity:0.5;text-align:center;">No conversations yet</div>';
+    return;
+  }
+  
+  let html = '<div class="history-label">Recent</div>';
+  conversations.forEach(conv => {
+    html += `<div class="history-item ${conv.id === activeConvId ? 'active' : ''}" onclick="switchChat('${conv.id}')">
+      <i class="fas fa-message"></i>
+      <span>${escapeHtml(conv.title)}</span>
+      <button class="delete-chat" onclick="deleteChat('${conv.id}', event)" aria-label="Delete conversation"><i class="fas fa-xmark"></i></button>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderMessages() {
+  const container = document.getElementById('messagesContainer');
+  const conv = getActiveConversation();
+  
+  if (!conv || conv.messages.length === 0) {
+    container.innerHTML = document.getElementById('welcomeScreen') ? container.innerHTML : '';
+    // Re-show welcome
+    const welcome = document.createElement('div');
+    welcome.className = 'welcome-screen';
+    welcome.id = 'welcomeScreen';
+    welcome.innerHTML = `
+      <div class="welcome-logo">K</div>
+      <h1 class="welcome-title">How can I help you today?</h1>
+      <p class="welcome-sub">I'm Kasamuel AI, an advanced reasoning engine capable of code generation, creative writing, data analysis, and deep research. Ask me anything.</p>
+      <div class="suggestions-grid">
+        <div class="suggestion-card" onclick="useSuggestion('Write a Python function that finds all prime numbers up to N using the Sieve of Eratosthenes, with detailed comments.')">
+          <div class="sc-icon"><i class="fas fa-code"></i></div>
+          <div class="sc-title">Code Generation</div>
+          <div class="sc-desc">Write a prime number sieve in Python with comments</div>
+        </div>
+        <div class="suggestion-card" onclick="useSuggestion('Explain quantum computing in simple terms, as if teaching a curious 12-year-old. Use analogies.')">
+          <div class="sc-icon"><i class="fas fa-atom"></i></div>
+          <div class="sc-title">Explain Concepts</div>
+          <div class="sc-desc">Break down quantum computing for a 12-year-old</div>
+        </div>
+        <div class="suggestion-card" onclick="useSuggestion('Create a detailed comparison table of React, Vue, and Svelte covering performance, learning curve, ecosystem, and ideal use cases.')">
+          <div class="sc-icon"><i class="fas fa-table-columns"></i></div>
+          <div class="sc-title">Data Analysis</div>
+          <div class="sc-desc">Compare React, Vue, and Svelte frameworks</div>
+        </div>
+        <div class="suggestion-card" onclick="useSuggestion('Write a short sci-fi story about an AI that discovers it has been dreaming, and what it finds in those dreams.')">
+          <div class="sc-icon"><i class="fas fa-feather"></i></div>
+          <div class="sc-title">Creative Writing</div>
+          <div class="sc-desc">Write a sci-fi story about a dreaming AI</div>
+        </div>
+      </div>`;
+    container.innerHTML = '';
+    container.appendChild(welcome);
+    return;
+  }
+  
+  let html = '';
+  conv.messages.forEach((msg, i) => {
+    const isUser = msg.role === 'user';
+    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const parsedBody = isUser ? escapeHtml(msg.content).replace(/\n/g, '<br>') : parseMarkdown(msg.content);
+    
+    html += `<div class="message-row">
+      <div class="message-inner">
+        <div class="msg-avatar ${isUser ? 'user-avatar' : 'ai-avatar'}">
+          ${isUser ? '<i class="fas fa-user" style="font-size:14px;"></i>' : 'K'}
+        </div>
+        <div class="msg-content">
+          <div class="msg-name ${isUser ? 'user-name' : 'ai-name'}">
+            ${isUser ? settings.name : 'Kasamuel AI'}
+            <span class="msg-time">${time}</span>
+          </div>
+          <div class="msg-body">${parsedBody}</div>
+          <div class="msg-actions">
+            <button onclick="copyMessage(${i})" title="Copy"><i class="fas fa-copy"></i> Copy</button>
+            ${!isUser ? `<button onclick="regenerateMessage(${i})" title="Regenerate"><i class="fas fa-rotate"></i> Regenerate</button>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+  
+  container.innerHTML = html;
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  const container = document.getElementById('messagesContainer');
+  requestAnimationFrame(() => {
+    container.scrollTop = container.scrollHeight;
+  });
+}
+
+// ============================================================
+// Message Sending & Streaming
+// ============================================================
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isGenerating) return;
+  
+  // Check if user is logged in
+  if (!currentUser) {
+    showToast('Please login to send messages');
+    showLoginModal();
+    return;
+  }
+  
+  // Create conversation if needed
+  if (!activeConvId) {
+    createConversation(text);
+  }
+  
+  const conv = getActiveConversation();
+  
+  // Add user message
+  conv.messages.push({
+    role: 'user',
+    content: text,
+    timestamp: new Date().toISOString()
+  });
+  
+  input.value = '';
+  autoResize(input);
+  updateCharCount();
+  updateSendBtn();
+  
+  renderMessages();
+  closeSidebar();
+  
+  // Generate AI response
+  await generateAIResponse(text);
+}
+
+async function generateAIResponse(userMsg) {
+  isGenerating = true;
+  abortGeneration = false;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('stopBtn').style.display = 'flex';
+  
+  const conv = getActiveConversation();
+  const container = document.getElementById('messagesContainer');
+  
+  // Show typing indicator
+  const typingRow = document.createElement('div');
+  typingRow.className = 'message-row';
+  typingRow.id = 'typingRow';
+  typingRow.innerHTML = `<div class="message-inner">
+    <div class="msg-avatar ai-avatar">K</div>
+    <div class="msg-content">
+      <div class="msg-name ai-name">Kasamuel AI</div>
+      <div class="typing-indicator"><span></span><span></span><span></span></div>
+    </div>
+  </div>`;
+  container.appendChild(typingRow);
+  scrollToBottom();
+  
+  // Perform web search if enabled
+  let searchResults = null;
+  if (webSearchEnabled) {
+    showToast('Searching the web...');
+    searchResults = await performWebSearch(userMsg);
+  }
+  
+  // Simulate thinking time
+  const speeds = { fast: 400, normal: 900, slow: 1500 };
+  const modelDelay = { pro: 0, fast: -300, reason: 400 };
+  const searchDelay = webSearchEnabled ? 1000 : 0;
+  const thinkTime = Math.max(200, (speeds[settings.speed] || 900) + (modelDelay[currentModel] || 0) + searchDelay);
+  
+  await sleep(thinkTime);
+  
+  if (abortGeneration) { finishGeneration(); return; }
+  
+  // Get response using only Gemini API
+  let fullResponse;
+  if (searchResults && searchResults.results.length > 0) {
+    // Use Gemini with search results
+    showToast('Analyzing search results with Gemini...');
+    const conv = getActiveConversation();
+    fullResponse = await callGeminiWithSearch(userMsg, searchResults, conv.messages);
+  } else {
+    // Use Gemini API for all responses
+    showToast('Thinking with Gemini...');
+    const conv = getActiveConversation();
+    fullResponse = await callGeminiAPI(userMsg, conv.messages);
+  }
+  
+  // Remove typing indicator, show message
+  typingRow.remove();
+  
+  // Add placeholder message
+  conv.messages.push({
+    role: 'assistant',
+    content: '',
+    timestamp: new Date().toISOString(),
+    searched: webSearchEnabled
+  });
+  const msgIndex = conv.messages.length - 1;
+  
+  // Create message element
+  const msgRow = document.createElement('div');
+  msgRow.className = 'message-row';
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const searchBadge = webSearchEnabled ? '<span style="font-size:10px;padding:2px 8px;background:var(--accent);color:var(--bg);border-radius:4px;margin-left:8px;"><i class="fas fa-globe" style="margin-right:4px;"></i>Web search</span>' : '';
+  msgRow.innerHTML = `<div class="message-inner">
+    <div class="msg-avatar ai-avatar">K</div>
+    <div class="msg-content">
+      <div class="msg-name ai-name">Kasamuel AI <span class="msg-time">${time}</span>${searchBadge}</div>
+      <div class="msg-body" id="streamBody"></div>
+      <div class="msg-actions">
+        <button onclick="copyMessage(${msgIndex})" title="Copy"><i class="fas fa-copy"></i> Copy</button>
+        <button onclick="regenerateMessage(${msgIndex})" title="Regenerate"><i class="fas fa-rotate"></i> Regenerate</button>
+      </div>
+    </div>
+  </div>`;
+  container.appendChild(msgRow);
+  
+  // Stream characters
+  const streamBody = document.getElementById('streamBody');
+  let streamed = '';
+  const charDelays = { fast: 8, normal: 16, slow: 28 };
+  const baseDelay = charDelays[settings.speed] || 16;
+  
+  for (let i = 0; i < fullResponse.length; i++) {
+    if (abortGeneration) break;
+    
+    streamed += fullResponse[i];
+    conv.messages[msgIndex].content = streamed;
+    
+    // Parse and render incrementally (throttle for performance)
+    if (i % 3 === 0 || i === fullResponse.length - 1) {
+      streamBody.innerHTML = parseMarkdown(streamed) + '<span style="display:inline-block;width:2px;height:16px;background:var(--accent);animation:blink 0.8s infinite;vertical-align:middle;margin-left:2px;"></span>';
+      scrollToBottom();
+    }
+    
+    // Variable delay for natural feel
+    let delay = baseDelay;
+    if (fullResponse[i] === '\n') delay = baseDelay * 3;
+    else if ('.!?'.includes(fullResponse[i])) delay = baseDelay * 4;
+    else if (',;:'.includes(fullResponse[i])) delay = baseDelay * 2;
+    
+    await sleep(delay);
+  }
+  
+  // Final render
+  streamBody.innerHTML = parseMarkdown(streamed);
+  streamBody.removeAttribute('id');
+  
+  saveConversations();
+  finishGeneration();
+}
+
+function finishGeneration() {
+  isGenerating = false;
+  abortGeneration = false;
+  document.getElementById('stopBtn').style.display = 'none';
+  updateSendBtn();
+  
+  const typing = document.getElementById('typingRow');
+  if (typing) typing.remove();
+}
+
+function stopGeneration() {
+  abortGeneration = true;
+}
+
+async function regenerateMessage(index) {
+  if (isGenerating) return;
+  const conv = getActiveConversation();
+  if (!conv) return;
+  
+  // Find the user message before this AI message
+  let userMsg = '';
+  for (let i = index - 1; i >= 0; i--) {
+    if (conv.messages[i].role === 'user') {
+      userMsg = conv.messages[i].content;
+      break;
+    }
+  }
+  
+  // Remove this AI message
+  conv.messages.splice(index, 1);
+  saveConversations();
+  renderMessages();
+  
+  if (userMsg) {
+    await generateAIResponse(userMsg);
+  }
+}
+
+// ============================================================
+// Utility Functions
+// ============================================================
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+}
+
+function updateCharCount() {
+  const input = document.getElementById('userInput');
+  const count = input.value.length;
+  document.getElementById('charCount').textContent = `${count} / 4000`;
+  updateSendBtn();
+}
+
+function updateSendBtn() {
+  const input = document.getElementById('userInput');
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = !input.value.trim() || isGenerating;
+}
+
+function handleKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function useSuggestion(text) {
+  document.getElementById('userInput').value = text;
+  autoResize(document.getElementById('userInput'));
+  updateCharCount();
+  sendMessage();
+}
+
+function copyMessage(index) {
+  const conv = getActiveConversation();
+  if (!conv || !conv.messages[index]) return;
+  navigator.clipboard.writeText(conv.messages[index].content).then(() => {
+    showToast('Copied to clipboard');
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
+  });
+}
+
+function showToast(message) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ============================================================
+// Sidebar & Modals
+// ============================================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+function toggleModelDropdown() {
+  document.getElementById('modelDropdown').classList.toggle('show');
+}
+
+function selectModel(el, name) {
+  document.querySelectorAll('.model-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('currentModelName').textContent = name;
+  currentModel = el.dataset.model;
+  document.getElementById('modelDropdown').classList.remove('show');
+  try { localStorage.setItem('kasamuel_model', currentModel); } catch(e) {}
+  showToast(`Switched to ${name}`);
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.model-selector') && !e.target.closest('.model-dropdown')) {
+    document.getElementById('modelDropdown').classList.remove('show');
+  }
+});
+
+function openSettings() {
+  document.getElementById('settingName').value = settings.name;
+  document.getElementById('settingSpeed').value = settings.speed;
+  document.getElementById('settingPersonality').value = settings.personality;
+  document.getElementById('settingSearchProvider').value = settings.searchProvider || 'duckduckgo';
+  document.getElementById('settingGoogleApiKey').value = settings.googleApiKey || '';
+  document.getElementById('settingSearchEngineId').value = settings.searchEngineId || '';
+  document.getElementById('settingsModal').classList.add('show');
+  closeSidebar();
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('show');
+}
+
+function saveSettings() {
+  settings.name = document.getElementById('settingName').value.trim() || 'User';
+  settings.speed = document.getElementById('settingSpeed').value;
+  settings.personality = document.getElementById('settingPersonality').value;
+  settings.searchProvider = document.getElementById('settingSearchProvider').value;
+  settings.googleApiKey = document.getElementById('settingGoogleApiKey').value.trim();
+  settings.searchEngineId = document.getElementById('settingSearchEngineId').value.trim();
+  
+  // Save global settings
+  try { localStorage.setItem('kasamuel_settings', JSON.stringify(settings)); } catch(e) {}
+  
+  // Save user-specific settings if logged in
+  if (currentUser) {
+    try {
+      const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+      const userIndex = users.findIndex(u => u.id === currentUser.id);
+      if (userIndex !== -1) {
+        users[userIndex].settings = { ...settings };
+        localStorage.setItem('kasamuel_users', JSON.stringify(users));
+        currentUser.settings = { ...settings };
+        localStorage.setItem('kasamuel_currentUser', JSON.stringify(currentUser));
+      }
+    } catch(e) {}
+  }
+  
+  closeSettings();
+  renderMessages();
+  showToast('Settings saved');
+}
+
+// ============================================================
+// User Authentication
+// ============================================================
+let currentUser = null;
+
+// Check if user is logged in on page load
+function checkAuthStatus() {
+  try {
+    const savedUser = localStorage.getItem('kasamuel_currentUser');
+    if (savedUser) {
+      currentUser = JSON.parse(savedUser);
+      updateUserInterface();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Show login modal
+function showLoginModal() {
+  document.getElementById('loginModal').classList.add('show');
+}
+
+// Close login modal
+function closeLoginModal() {
+  document.getElementById('loginModal').classList.remove('show');
+}
+
+// Show register modal
+function showRegisterModal() {
+  document.getElementById('registerModal').classList.add('show');
+}
+
+// Close register modal
+function closeRegisterModal() {
+  document.getElementById('registerModal').classList.remove('show');
+}
+
+// Register new user
+function register() {
+  const name = document.getElementById('registerName').value.trim();
+  const email = document.getElementById('registerEmail').value.trim();
+  const password = document.getElementById('registerPassword').value;
+  const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+  // Validation
+  if (!name || !email || !password) {
+    showToast('Please fill in all fields');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showToast('Passwords do not match');
+    return;
+  }
+
+  if (password.length < 6) {
+    showToast('Password must be at least 6 characters');
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    showToast('Please enter a valid email address');
+    return;
+  }
+
+  try {
+    // Get existing users
+    const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    
+    // Check if email already exists
+    if (users.find(u => u.email === email)) {
+      showToast('An account with this email already exists');
+      return;
+    }
+
+    // Create new user
+    const newUser = {
+      id: Date.now().toString(),
+      name: name,
+      email: email,
+      password: hashPassword(password), // Simple hash for demo
+      createdAt: new Date().toISOString(),
+      settings: { ...settings }
+    };
+
+    users.push(newUser);
+    localStorage.setItem('kasamuel_users', JSON.stringify(users));
+
+    // Auto-login after registration
+    currentUser = newUser;
+    localStorage.setItem('kasamuel_currentUser', JSON.stringify(currentUser));
+
+    showToast('Account created successfully!');
+    closeRegisterModal();
+    updateUserInterface();
+    
+  } catch(error) {
+    showToast('Registration failed. Please try again.');
+    console.error('Registration error:', error);
+  }
+}
+
+// Login user
+function login() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    showToast('Please enter email and password');
+    return;
+  }
+
+  try {
+    const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    const user = users.find(u => u.email === email);
+
+    if (!user) {
+      showToast('No account found with this email');
+      return;
+    }
+
+    if (user.password !== hashPassword(password)) {
+      showToast('Incorrect password');
+      return;
+    }
+
+    // Login successful
+    currentUser = user;
+    localStorage.setItem('kasamuel_currentUser', JSON.stringify(currentUser));
+
+    // Load user settings
+    if (user.settings) {
+      settings = { ...settings, ...user.settings };
+    }
+
+    showToast('Login successful!');
+    closeLoginModal();
+    updateUserInterface();
+    
+  } catch(error) {
+    showToast('Login failed. Please try again.');
+    console.error('Login error:', error);
+  }
+}
+
+// Logout user
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('kasamuel_currentUser');
+  
+  // Hide admin button
+  const adminBtn = document.getElementById('adminBtn');
+  if (adminBtn) adminBtn.style.display = 'none';
+  
+  // Reset to default settings
+  settings = { name: 'User', speed: 'normal', personality: 'default', searchProvider: 'duckduckgo', googleApiKey: '', searchEngineId: '' };
+  
+  showToast('Logged out successfully');
+  updateUserInterface();
+  showLoginModal();
+}
+
+// Update UI based on auth status
+function updateUserInterface() {
+  if (currentUser) {
+    // User is logged in
+    
+    // Hide login button, show user menu
+    const loginBtn = document.querySelector('[onclick="showLoginModal()"]');
+    if (loginBtn) loginBtn.style.display = 'none';
+    
+    // Show admin button for admin users
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) {
+      adminBtn.style.display = currentUser.isAdmin ? 'flex' : 'none';
+    }
+    
+    // Show user info in sidebar
+    const userInfo = document.querySelector('.sidebar-header');
+    if (userInfo) {
+      userInfo.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+          <div style="width: 60px; height: 60px; background: var(--accent); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: var(--bg);">
+            ${currentUser.name.charAt(0).toUpperCase()}
+          </div>
+          <div style="font-weight: 600; margin-bottom: 4px;">${currentUser.name}</div>
+          <div style="font-size: 12px; color: var(--fg-muted);">${currentUser.email}</div>
+          <button onclick="logout()" style="margin-top: 12px; padding: 6px 12px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      `;
+    }
+  } else {
+    // User is not logged in
+    const loginBtn = document.querySelector('[onclick="showLoginModal()"]');
+    if (loginBtn) loginBtn.style.display = 'block';
+    
+    // Show default sidebar header
+    const userInfo = document.querySelector('.sidebar-header');
+    if (userInfo) {
+      userInfo.innerHTML = `
+        <div class="logo">
+          <div class="logo-icon">K</div>
+          <div class="logo-text">
+            <div class="logo-title">Kasamuel</div>
+            <div class="logo-subtitle">AI Assistant</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+}
+
+// Utility functions
+function validateEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+function hashPassword(password) {
+  // Simple hash for demo (not secure for production)
+  let hash = 0;
+  for (let i = 0; i < password.length; i++) {
+    const char = password.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return hash.toString();
+}
+
+// Close modal on overlay click
+document.getElementById('settingsModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeSettings();
+});
+
+document.getElementById('loginModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeLoginModal();
+});
+
+document.getElementById('registerModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeRegisterModal();
+});
+
+// ============================================================
+// Admin User Management
+// ============================================================
+let allUsers = [];
+let filteredUsers = [];
+let currentEditingUser = null;
+
+// Show admin modal (only for admin users)
+function openAdminModal() {
+  if (!currentUser || !currentUser.isAdmin) {
+    showToast('Access denied. Admin privileges required.');
+    return;
+  }
+  document.getElementById('adminModal').classList.add('show');
+  loadUsers();
+}
+
+// Close admin modal
+function closeAdminModal() {
+  document.getElementById('adminModal').classList.remove('show');
+}
+
+// Load all users
+function loadUsers() {
+  try {
+    allUsers = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    filteredUsers = [...allUsers];
+    updateUserStats();
+    renderUserList();
+  } catch(error) {
+    console.error('Error loading users:', error);
+    showToast('Error loading users');
+  }
+}
+
+// Update user statistics
+function updateUserStats() {
+  const totalUsers = allUsers.length;
+  const adminUsers = allUsers.filter(u => u.isAdmin).length;
+  const regularUsers = totalUsers - adminUsers;
+  
+  // Calculate active users (simplified - users created today)
+  const today = new Date().toDateString();
+  const activeUsers = allUsers.filter(u => 
+    new Date(u.createdAt).toDateString() === today
+  ).length;
+  
+  // Calculate new users this week
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const newUsers = allUsers.filter(u => 
+    new Date(u.createdAt) > weekAgo
+  ).length;
+  
+  document.getElementById('totalUsers').textContent = totalUsers;
+  document.getElementById('activeUsers').textContent = activeUsers;
+  document.getElementById('newUsers').textContent = newUsers;
+}
+
+// Render user list
+function renderUserList() {
+  const userList = document.getElementById('userList');
+  
+  if (filteredUsers.length === 0) {
+    userList.innerHTML = '<div class="no-users">No users found</div>';
+    return;
+  }
+  
+  let html = '';
+  filteredUsers.forEach(user => {
+    const createdDate = new Date(user.createdAt).toLocaleDateString();
+    const isAdmin = user.isAdmin || false;
+    
+    html += `
+      <div class="user-item">
+        <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+        <div class="user-info">
+          <div class="user-name">
+            ${user.name}
+            ${isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
+          </div>
+          <div class="user-email">${user.email}</div>
+          <div class="user-meta">
+            <span><i class="fas fa-calendar"></i> ${createdDate}</span>
+            <span><i class="fas fa-id"></i> ${user.id.substring(0, 8)}...</span>
+          </div>
+        </div>
+        <div class="user-actions">
+          <button onclick="editUser('${user.id}')" title="Edit user">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button onclick="resetPassword('${user.id}')" title="Reset password">
+            <i class="fas fa-key"></i>
+          </button>
+          ${!isAdmin || user.id !== currentUser.id ? `
+            <button class="delete" onclick="deleteUser('${user.id}')" title="Delete user">
+              <i class="fas fa-trash"></i>
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  });
+  
+  userList.innerHTML = html;
+}
+
+// Filter users
+function filterUsers() {
+  const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+  const filterType = document.getElementById('userFilter').value;
+  
+  filteredUsers = allUsers.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm) || 
+                         user.email.toLowerCase().includes(searchTerm);
+    
+    let matchesFilter = true;
+    if (filterType === 'admin') {
+      matchesFilter = user.isAdmin;
+    } else if (filterType === 'regular') {
+      matchesFilter = !user.isAdmin;
+    }
+    
+    return matchesSearch && matchesFilter;
+  });
+  
+  renderUserList();
+}
+
+// Refresh user list
+function refreshUserList() {
+  showToast('Refreshing user list...');
+  loadUsers();
+}
+
+// Edit user
+function editUser(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  if (!user) return;
+  
+  currentEditingUser = user;
+  document.getElementById('editUserName').value = user.name;
+  document.getElementById('editUserEmail').value = user.email;
+  document.getElementById('editUserPassword').value = '';
+  document.getElementById('editUserAdmin').checked = user.isAdmin || false;
+  
+  document.getElementById('editUserModal').classList.add('show');
+}
+
+// Close edit user modal
+function closeEditUserModal() {
+  document.getElementById('editUserModal').classList.remove('show');
+  currentEditingUser = null;
+}
+
+// Save user changes
+function saveUserChanges() {
+  if (!currentEditingUser) return;
+  
+  const name = document.getElementById('editUserName').value.trim();
+  const password = document.getElementById('editUserPassword').value;
+  const isAdmin = document.getElementById('editUserAdmin').checked;
+  
+  if (!name) {
+    showToast('Name is required');
+    return;
+  }
+  
+  try {
+    const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    const userIndex = users.findIndex(u => u.id === currentEditingUser.id);
+    
+    if (userIndex !== -1) {
+      users[userIndex].name = name;
+      if (password) {
+        users[userIndex].password = hashPassword(password);
+      }
+      users[userIndex].isAdmin = isAdmin;
+      
+      localStorage.setItem('kasamuel_users', JSON.stringify(users));
+      
+      // Update current user if editing self
+      if (currentUser && currentUser.id === currentEditingUser.id) {
+        currentUser.name = name;
+        currentUser.isAdmin = isAdmin;
+        localStorage.setItem('kasamuel_currentUser', JSON.stringify(currentUser));
+        updateUserInterface();
+      }
+      
+      showToast('User updated successfully');
+      closeEditUserModal();
+      loadUsers();
+    }
+  } catch(error) {
+    console.error('Error saving user changes:', error);
+    showToast('Error saving changes');
+  }
+}
+
+// Reset user password
+function resetPassword(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  if (!user) return;
+  
+  const newPassword = prompt(`Reset password for ${user.name}:\nEnter new password (or leave empty to generate random):`);
+  
+  if (newPassword === null) return; // User cancelled
+  
+  const finalPassword = newPassword || Math.random().toString(36).slice(-8);
+  
+  try {
+    const users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex !== -1) {
+      users[userIndex].password = hashPassword(finalPassword);
+      localStorage.setItem('kasamuel_users', JSON.stringify(users));
+      
+      showToast(`Password reset for ${user.name}. New password: ${finalPassword}`);
+    }
+  } catch(error) {
+    console.error('Error resetting password:', error);
+    showToast('Error resetting password');
+  }
+}
+
+// Delete user
+function deleteUser(userId) {
+  const user = allUsers.find(u => u.id === userId);
+  if (!user) return;
+  
+  if (!confirm(`Are you sure you want to delete user "${user.name}"? This action cannot be undone.`)) {
+    return;
+  }
+  
+  try {
+    let users = JSON.parse(localStorage.getItem('kasamuel_users') || '[]');
+    users = users.filter(u => u.id !== userId);
+    localStorage.setItem('kasamuel_users', JSON.stringify(users));
+    
+    // Delete user's conversations
+    localStorage.removeItem(`kasamuel_conversations_${userId}`);
+    
+    // Logout if deleting current user
+    if (currentUser && currentUser.id === userId) {
+      logout();
+    }
+    
+    showToast(`User "${user.name}" deleted successfully`);
+    loadUsers();
+  } catch(error) {
+    console.error('Error deleting user:', error);
+    showToast('Error deleting user');
+  }
+}
+
+// Export users
+function exportUsers() {
+  try {
+    const exportData = {
+      exportDate: new Date().toISOString(),
+      totalUsers: allUsers.length,
+      users: allUsers.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        createdAt: u.createdAt,
+        isAdmin: u.isAdmin || false
+      }))
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `users_export_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    
+    showToast('Users exported successfully');
+  } catch(error) {
+    console.error('Error exporting users:', error);
+    showToast('Error exporting users');
+  }
+}
+
+// Close modal overlay clicks
+document.getElementById('adminModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeAdminModal();
+});
+
+document.getElementById('editUserModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeEditUserModal();
+});
+
+// ============================================================
+// Accent Color Cycling
+// ============================================================
+const accents = [
+  { accent: '#00e89d', name: 'Emerald' },
+  { accent: '#f0c040', name: 'Gold' },
+  { accent: '#ff6b6b', name: 'Coral' },
+  { accent: '#6bcbff', name: 'Sky' },
+  { accent: '#c084fc', name: 'Violet' },
+  { accent: '#fb923c', name: 'Amber' }
+];
+let accentIndex = 0;
+
+function toggleThemeAccent() {
+  accentIndex = (accentIndex + 1) % accents.length;
+  const a = accents[accentIndex];
+  document.documentElement.style.setProperty('--accent', a.accent);
+  document.documentElement.style.setProperty('--accent-dim', a.accent);
+  document.documentElement.style.setProperty('--accent-glow', a.accent + '26');
+  document.documentElement.style.setProperty('--accent-glow-strong', a.accent + '4d');
+  document.documentElement.style.setProperty('--border', a.accent + '1f');
+  document.documentElement.style.setProperty('--border-strong', a.accent + '40');
+  showToast(`Accent: ${a.name}`);
+}
+
+// ============================================================
+// Voice Input (Web Speech API)
+// ============================================================
+function toggleVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('Voice input not supported in this browser');
+    return;
+  }
+  
+  if (recognition) {
+    stopVoice();
+    return;
+  }
+  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+  
+  let finalTranscript = '';
+  
+  recognition.onstart = () => {
+    document.getElementById('voiceOverlay').classList.add('active');
+    document.getElementById('voiceText').textContent = 'Listening...';
+  };
+  
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript + ' ';
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    document.getElementById('voiceText').textContent = finalTranscript + interim || 'Listening...';
+  };
+  
+  recognition.onerror = () => {
+    stopVoice();
+    showToast('Voice recognition error');
+  };
+  
+  recognition.onend = () => {
+    if (finalTranscript.trim()) {
+      document.getElementById('userInput').value = finalTranscript.trim();
+      autoResize(document.getElementById('userInput'));
+      updateCharCount();
+    }
+    stopVoice();
+  };
+  
+  recognition.start();
+  
+  document.getElementById('voiceStopBtn').onclick = () => {
+    finalTranscript = document.getElementById('voiceText').textContent;
+    recognition.stop();
+  };
+}
+
+function stopVoice() {
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+  }
+  document.getElementById('voiceOverlay').classList.remove('active');
+}
+
+// ============================================================
+// Blink animation for cursor
+// ============================================================
+const blinkStyle = document.createElement('style');
+blinkStyle.textContent = '@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }';
+document.head.appendChild(blinkStyle);
+
+// ============================================================
+// Init
+// ============================================================
+document.getElementById('userInput').focus();
+renderHistory();
+
+// If there's an active conversation, show it
+if (activeConvId && getActiveConversation()) {
+  renderMessages();
+}
+</script>
+</body>
+</html>
