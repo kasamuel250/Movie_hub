@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -12,26 +11,45 @@ const Watchlist = require('./models/Watchlist');
 const WatchHistory = require('./models/WatchHistory');
 const Favorite = require('./models/Favorite');
 const Comment = require('./models/Comment');
+const AdminMessage = require('./models/AdminMessage');
+const ActivityLog = require('./models/ActivityLog');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(
+  'https://gnwexuyvbjcyggnmpbfp.supabase.co',
+  'sb_publishable_yTzl54l-ioSt9vo75Tuu4Q_tYgbNqQ6'
+);
+
 const { getEnrichedMovieData } = require('./movieService');
 
 const app = express();
+
+// Manual CORS middleware (reliable, no wildcard issues)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5174'];
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5174'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-    credentials: true
-}));
 
 const PORT = process.env.PORT || 5000;
 const TMDB_URL = 'https://api.themoviedb.org/3';
-const JWT_SECRET = process.env.JWT_SECRET || 'filmz-super-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/filmz';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'kasamuel71@gmail.com';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'tetaornella@250';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-const isAdminUser = (decoded) => decoded?.role === 'admin' || decoded?.email === ADMIN_EMAIL;
+const isAdminUser = (decoded) => decoded?.role === 'admin' || decoded?.isAdminPanel === true;
 
 const requireAdmin = (req, res) => {
   const token = req.cookies?.token || (req.headers?.authorization ? req.headers.authorization.split(' ')[1] : null);
@@ -54,7 +72,7 @@ mongoose.connect(MONGODB_URI, {
     await User.create({
       email: ADMIN_EMAIL,
       passwordHash,
-      name: 'Filmz Admin',
+      name: 'Flims_store Admin',
       role: 'admin'
     });
     console.log('Admin user created');
@@ -159,6 +177,11 @@ app.post('/api/comments', async (req, res) => {
       text
     });
 
+    await ActivityLog.create({
+      type: 'comment',
+      description: `${userName} commented on movie #${movieId}`
+    });
+
     res.json({
       id: result._id,
       movieId: result.movieId,
@@ -183,6 +206,16 @@ app.post('/api/auth/register', async (req, res) => {
   }
 
   try {
+    // Register in Supabase
+    const { data: supabaseData, error: supabaseError } = await supabase.auth.signUp({
+      email: email.toLowerCase(),
+      password: password
+    });
+
+    if (supabaseError) {
+      console.error('Supabase registration error:', supabaseError);
+    }
+
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
@@ -195,6 +228,11 @@ app.post('/api/auth/register', async (req, res) => {
       name: '',
       bio: '',
       role: 'user'
+    });
+
+    await ActivityLog.create({
+      type: 'register',
+      description: `New user registered: ${email.toLowerCase()}`
     });
 
     const token = jwt.sign({ id: newUser._id, email: newUser.email, role: newUser.role }, JWT_SECRET, { expiresIn: '7d' });
@@ -215,16 +253,50 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
+  const { email, username, password } = req.body;
+  const loginId = (email || username || '').trim().toLowerCase();
+
+  if (!loginId || !password) {
+    return res.status(400).json({ error: 'Login ID and password are required' });
   }
 
   try {
-    const user = await User.findOne({ email: email.toLowerCase() });
+    // Quick admin login: admin / admin
+    if (loginId === 'admin' && password === 'admin') {
+      const adminToken = jwt.sign({
+        id: 'admin-panel',
+        email: ADMIN_EMAIL || 'admin',
+        role: 'admin',
+        isAdminPanel: true
+      }, JWT_SECRET, { expiresIn: '24h' });
+
+      return res.json({
+        user: { id: 'admin-panel', email: ADMIN_EMAIL || 'admin', role: 'admin' },
+        token: adminToken
+      });
+    }
+
+    // Regular user login via email
+    if (loginId.includes('@')) {
+      // Try Supabase auth
+      const { error: supabaseError } = await supabase.auth.signInWithPassword({
+        email: loginId,
+        password: password
+      });
+      if (supabaseError) {
+        console.warn('Supabase login fell back to MongoDB:', supabaseError.message);
+      }
+    }
+
+    const user = await User.findOne({ email: loginId });
     if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    await ActivityLog.create({
+      type: 'login',
+      description: `User logged in: ${loginId}`
+    });
 
     const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     res.cookie('token', token, {
@@ -237,6 +309,7 @@ app.post('/api/auth/login', async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
+        role: user.role,
         createdAt: user.createdAt
       },
       token
@@ -252,6 +325,13 @@ app.get('/api/auth/me', async (req, res) => {
   const decoded = getUserFromToken(token);
   if (!decoded) {
     return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  // Admin panel JWTs have id 'admin-panel' – return generic admin user
+  if (decoded.isAdminPanel || decoded.id === 'admin-panel') {
+    return res.json({
+      user: { id: 'admin-panel', email: ADMIN_EMAIL || 'admin', role: 'admin' }
+    });
   }
 
   try {
@@ -276,6 +356,32 @@ app.get('/api/auth/me', async (req, res) => {
 app.post('/api/auth/logout', (req, res) => {
   res.clearCookie('token', { httpOnly: true, sameSite: 'lax' });
   res.json({ success: true });
+});
+
+// Admin panel login endpoint
+app.post('/api/auth/admin-login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Accept admin/admin or env-configured credentials
+  const validAdmin = (username === 'admin' && password === 'admin') ||
+                     (username === ADMIN_EMAIL && password === ADMIN_PASSWORD);
+
+  if (validAdmin) {
+    const token = jwt.sign({
+      id: 'admin-panel',
+      email: ADMIN_EMAIL || 'admin',
+      role: 'admin',
+      isAdminPanel: true
+    }, JWT_SECRET, { expiresIn: '24h' });
+
+    res.json({
+      success: true,
+      token,
+      user: { id: 'admin-panel', email: ADMIN_EMAIL || 'admin', role: 'admin' }
+    });
+  } else {
+    res.status(401).json({ error: 'Invalid admin credentials' });
+  }
 });
 
 app.post('/api/auth/forgot-password', async (req, res) => {
@@ -388,6 +494,10 @@ app.post('/api/watch-history', async (req, res) => {
         movieTitle: movieTitle || '',
         watchedAt: new Date()
       });
+      await ActivityLog.create({
+        type: 'watch',
+        description: `User watched: ${movieTitle || 'Movie #' + movieId}`
+      });
     }
 
     res.json({ success: true });
@@ -474,6 +584,103 @@ app.delete('/api/admin/users/:id', async (req, res) => {
   }
 });
 
+// Admin: Get all comments
+app.get('/api/admin/comments', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    const comments = await Comment.find().sort({ createdAt: -1 }).lean().limit(100);
+    res.json({
+      comments: comments.map(c => ({
+        id: c._id,
+        userName: c.userName,
+        movieId: c.movieId,
+        text: c.text,
+        date: new Date(c.createdAt).toLocaleString('en-GB', {
+          day: '2-digit', month: 'short', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        })
+      }))
+    });
+  } catch (error) {
+    console.error('Admin comments fetch error:', error);
+    res.status(500).json({ comments: [] });
+  }
+});
+
+// Admin: Delete comment
+app.delete('/api/admin/comments/:id', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    await Comment.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Admin delete comment error:', error);
+    res.status(500).json({ error: 'Failed to delete comment' });
+  }
+});
+
+// Admin: Get messages from users
+app.get('/api/admin/messages', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    const messages = await AdminMessage.find().sort({ createdAt: -1 }).lean();
+    res.json({ messages });
+  } catch (error) {
+    console.error('Admin messages fetch error:', error);
+    res.status(500).json({ messages: [] });
+  }
+});
+
+// Admin: Delete message
+app.delete('/api/admin/messages/:id', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    await AdminMessage.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Admin delete message error:', error);
+    res.status(500).json({ error: 'Failed to delete message' });
+  }
+});
+
+// Admin: Reply to message
+app.post('/api/admin/messages/:id/reply', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    const { reply } = req.body;
+    await AdminMessage.findByIdAndUpdate(req.params.id, { reply, isRead: true });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Admin reply error:', error);
+    res.status(500).json({ error: 'Failed to send reply' });
+  }
+});
+
+// Admin: Get activity log
+app.get('/api/admin/activity', async (req, res) => {
+  const decoded = requireAdmin(req, res);
+  if (!decoded) return;
+
+  try {
+    const activity = await ActivityLog.find().sort({ createdAt: -1 }).lean().limit(50);
+    res.json({ activity });
+  } catch (error) {
+    console.error('Admin activity fetch error:', error);
+    res.status(500).json({ activity: [] });
+  }
+});
+
+// Update stats to include total comments
 app.get('/api/admin/stats', async (req, res) => {
   const decoded = requireAdmin(req, res);
   if (!decoded) return;
@@ -481,6 +688,8 @@ app.get('/api/admin/stats', async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
     const totalWatchRecords = await WatchHistory.countDocuments();
+    const totalComments = await Comment.countDocuments();
+
     const viewStatsRaw = await WatchHistory.aggregate([
       { $group: { _id: '$movieTitle', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
@@ -492,6 +701,7 @@ app.get('/api/admin/stats', async (req, res) => {
     res.json({
       totalUsers,
       totalWatchRecords,
+      totalComments,
       topMovieViews
     });
   } catch (error) {
@@ -499,6 +709,27 @@ app.get('/api/admin/stats', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch admin stats' });
   }
 });
+
+// User sends message to admin
+app.post('/api/admin/messages', async (req, res) => {
+  const { name, email, subject, message } = req.body;
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    await AdminMessage.create({ name, email, subject, message });
+    await ActivityLog.create({
+      type: 'message',
+      description: `New message from ${name} (${email}): ${subject}`
+    });
+    res.json({ success: true, message: 'Message sent successfully!' });
+  } catch (error) {
+    console.error('Admin message create error:', error);
+    res.status(500).json({ error: 'Failed to save message' });
+  }
+});
+
 
 app.get('/api/watchlists', async (req, res) => {
   const token = req.cookies?.token || req.headers?.authorization?.split(' ')[1];

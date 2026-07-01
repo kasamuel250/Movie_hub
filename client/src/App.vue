@@ -14,18 +14,17 @@
     <header class="main-header">
       <div class="header-inner">
         <div class="logo-group" @click="resetHome" @mousemove="moveLogo" @mouseleave="resetLogo" :style="logoTransform">
-          <h1 class="chameleon-name">Ka_samuel@250 <span>Filmz</span></h1>
+          <h1 class="chameleon-name">Ka_samuel250 <span>Flims_store</span></h1>
         </div>
         <nav class="nav-pills">
-          <button class="pill" :class="{ active: currentPageName === 'home' }" @click="resetHome"><span>🎬</span> Theater</button>
-          <button v-if="isAuthenticated" class="pill" @click="setPage('profile')"><span>👤</span> Profile</button>
-          <button v-if="isAuthenticated" class="pill" @click="setPage('watchlists')"><span>📋</span> Lists</button>
-          <button v-if="isAdmin" class="pill" @click="setPage('admin')"><span>🛠️</span> Admin</button>
-          <button class="pill" @click="setPage('merch')"><span>🛍️</span> Merch</button>
-          <button class="pill" @click="setPage('faq')"><span>❓</span> FAQ</button>
-          <button v-if="isAuthenticated" class="pill" @click="handleLogout"><span>👋</span> Logout</button>
-          <button v-else class="pill" :class="{ active: currentPageName === 'login' }" @click="setPage('login')"><span>🔐</span> {{ isRegister ? 'Register' : 'Login' }}</button>
-          <button class="pill" :class="{ active: currentPageName === 'contact' }" @click="setPage('contact')"><span>📱</span> Connect</button>
+          <button class="pill" :class="{ active: currentPageName === 'home' }" @click="resetHome"><span><i class="fas fa-film"></i></span> Theater</button>
+          <button v-if="isAuthenticated" class="pill" @click="setPage('profile')"><span><i class="fas fa-user"></i></span> Profile</button>
+          <button v-if="isAuthenticated" class="pill" @click="setPage('watchlists')"><span><i class="fas fa-clipboard-list"></i></span> Lists</button>
+          <button v-if="isAdmin" class="pill" @click="setPage('admin')"><span><i class="fas fa-cog"></i></span> Admin</button>
+          <button v-if="isAuthenticated" class="pill" @click="handleLogout"><span><i class="fas fa-right-from-bracket"></i></span> Logout</button>
+          <button v-else class="pill" :class="{ active: currentPageName === 'login' }" @click="setPage('login')"><span><i class="fas fa-key"></i></span> {{ isRegister ? 'Register' : 'Login' }}</button>
+          <button class="pill" :class="{ active: currentPageName === 'contact-admin' }" @click="setPage('contact-admin')"><span><i class="fas fa-envelope"></i></span> Contact Admin</button>
+          <button class="pill" :class="{ active: currentPageName === 'contact' }" @click="setPage('contact')"><span><i class="fas fa-mobile-screen-button"></i></span> Connect</button>
         </nav>
       </div>
     </header>
@@ -41,9 +40,9 @@
           <div class="hero-description-group">
             <p class="hero-description">Dive into the freshest blockbusters, top-rated series, and curated picks from across the cinematic galaxy. Tap WATCH NOW to open the movie in a new tab for the best viewing experience.</p>
             <div class="hero-meta">
-              <span>🚀 Latest releases</span>
-              <span>🎬 Curated trending picks</span>
-              <span>✨ Infinite scroll discovery</span>
+              <span><i class="fas fa-rocket"></i> Latest releases</span>
+              <span><i class="fas fa-film"></i> Curated trending picks</span>
+              <span><i class="fas fa-star"></i> Infinite scroll discovery</span>
             </div>
           </div>
         </div>
@@ -63,7 +62,7 @@
               />
               <div v-else class="no-poster hero-no-poster">{{ movie.title || movie.name }}</div>
               <div class="hero-overlay">
-                <button class="btn-watch-gradient hero-watch-btn" @click.stop="playFullMovie(movie)">▶️ WATCH NOW</button>
+                <button class="btn-watch-gradient hero-watch-btn" @click.stop="playFullMovie(movie)"><i class="fas fa-play"></i> WATCH NOW</button>
               </div>
             </div>
           </div>
@@ -73,16 +72,16 @@
       <section v-if="currentPageName === 'home' && !trailerUrl && !fullMovieUrl" class="search-section">
         <div class="search-container">
           <div class="mode-switcher">
-            <button class="mode-btn" :class="{ active: mode === 'movie' }" @click="toggleMode('movie')">🎥 Movies</button>
-            <button class="mode-btn" :class="{ active: mode === 'tv' }" @click="toggleMode('tv')">📺 TV Series</button>
+            <button class="mode-btn" :class="{ active: mode === 'movie' }" @click="toggleMode('movie')"><i class="fas fa-video"></i> Movies</button>
+            <button class="mode-btn" :class="{ active: mode === 'tv' }" @click="toggleMode('tv')"><i class="fas fa-tv"></i> TV Series</button>
           </div>
           <div class="search-glow-box">
             <input v-model="searchQuery" placeholder="Search the galaxy..." @input="debouncedSearch" @keyup.enter="handleSearch(true)" />
-            <button @click="handleSearch(true)" class="search-action-btn"><span>🚀</span> EXPLORE</button>
+            <button @click="handleSearch(true)" class="search-action-btn"><i class="fas fa-rocket"></i> EXPLORE</button>
           </div>
           <div class="advanced-filters">
             <select v-model="advancedFilters.genre" class="glow-input">
-              <option v-for="genre in genreOptions" :key="genre.id" :value="genre.id">{{ genre.icon }} {{ genre.name }}</option>
+              <option v-for="genre in genreOptions" :key="genre.id" :value="genre.id">{{ genre.name }}</option>
             </select>
             <input v-model="advancedFilters.year" type="number" placeholder="Year" class="glow-input" />
             <input v-model="advancedFilters.rating" type="number" step="0.1" placeholder="Min Rating" class="glow-input" />
@@ -91,7 +90,7 @@
               <option value="release_date.desc">Release Date</option>
               <option value="vote_average.desc">Rating</option>
             </select>
-            <button @click="handleAdvancedSearch" class="search-action-btn">🔍 Advanced Search</button>
+            <button @click="handleAdvancedSearch" class="search-action-btn"><i class="fas fa-search"></i> Advanced Search</button>
           </div>
         </div>
       </section>
@@ -117,32 +116,31 @@
             >
               <div class="poster-box">
                 <div class="movie-card-actions">
-                  <button class="card-action-btn favorite" @click.stop="addToFavorites(item)" title="Favorite">❤️</button>
-                  <button class="card-action-btn watchlist" @click.stop="addToWatchlist(item)" title="Save to Watchlist">📌</button>
+                  <button class="card-action-btn favorite" @click.stop="addToFavorites(item)" title="Favorite"><i class="fas fa-heart"></i></button>
+                  <button class="card-action-btn watchlist" @click.stop="addToWatchlist(item)" title="Save to Watchlist"><i class="fas fa-bookmark"></i></button>
                 </div>
-              <img
-                v-if="item.poster_path"
-                :src="'https://image.tmdb.org/t/p/w500' + item.poster_path"
-                :alt="item.title || item.name"
-                loading="lazy"
-              >
-              <div v-else class="no-poster"><span>{{ item.title || item.name }}</span></div>
+                <img
+                  v-if="item.poster_path"
+                  :src="'https://image.tmdb.org/t/p/w500' + item.poster_path"
+                  :alt="item.title || item.name"
+                  loading="lazy"
+                >
+                <div v-else class="no-poster"><span>{{ item.title || item.name }}</span></div>
+              </div>
 
-              <div class="card-badge">⭐ {{ item.vote_average ? item.vote_average.toFixed(1) : 'N/A' }}</div>
+              <div class="card-badge"><i class="fas fa-star" style="color:#ffc107;font-size:.7rem"></i> {{ item.vote_average ? item.vote_average.toFixed(1) : 'N/A' }}</div>
 
               <div class="overlay">
                 <div class="overlay-content">
                   <h4 class="m-title">{{ item.title || item.name }}</h4>
                   <p class="m-info">{{ (item.release_date || item.first_air_date || '').split('-')[0] }}</p>
                   <div class="btns">
-                    <button class="btn-watch-gradient" @click.stop="playFullMovie(item)"><span>▶️</span> WATCH NOW</button>
-                    <button class="btn-trailer-red" @click.stop="playTrailer(item)"><span>🎞️</span> TRAILER</button>
-                    <button class="btn-download-blue" @click.stop="downloadMovieFile(item)"><span>⬇️</span> DOWNLOAD</button>
+                    <button class="btn-watch-gradient" @click.stop="playFullMovie(item)"><i class="fas fa-play"></i> WATCH NOW</button>
+                    <button class="btn-trailer-red" @click.stop="playTrailer(item)"><i class="fas fa-film"></i> TRAILER</button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           </template>
         </div>
 
@@ -156,30 +154,58 @@
         </div>
       </div>
 
-      <div v-if="trailerUrl || fullMovieUrl" class="cinema-hall-container">
+      <div v-if="trailerUrl || fullMovieUrl || showCinemaHall" class="cinema-hall-container">
         <div class="cinema-header">
           <div class="playing-info">
-            <span class="live-tag">🔴 LIVE</span>
+            <span class="live-tag"><i class="fas fa-circle" style="color:#ff0044;font-size:.6rem"></i> LIVE</span>
             <h3>{{ currentMovieTitle }}</h3>
           </div>
           <div class="cinema-actions">
-            <button v-if="fullMovieUrl" class="download-btn" @click="downloadMovie">⬇️ DOWNLOAD</button>
             <button class="exit-hall-btn" @click="closePlayer">✕ EXIT</button>
           </div>
         </div>
-        <div class="video-stage">
+        <div class="video-stage" v-if="trailerUrl">
           <div class="video-wrapper">
             <iframe
-              :src="fullMovieUrl || trailerUrl"
+              :src="trailerUrl"
               frameborder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               class="trailer-iframe"
+              loading="lazy"
+              allowfullscreen
             ></iframe>
+          </div>
+          <div class="trailer-actions" v-if="currentMovieYoutubeUrl">
+            <button class="youtube-btn" @click="openYoutubeTrailer" title="Watch on YouTube">
+              <i class="fab fa-youtube"></i> Watch on YouTube
+            </button>
+          </div>
+          <div v-if="currentMovieFallbackSources.length" class="source-switcher">
+            <span class="source-label">Source not loading?</span>
+            <button
+              v-for="(src, i) in currentMovieFallbackSources"
+              :key="i"
+              class="source-switch-btn"
+              @click="switchTrailerSource(src)"
+            >
+              <i class="fas fa-rotate"></i> Source {{ i + 1 }}
+            </button>
+          </div>
+        </div>
+        <div v-if="!trailerUrl && !fullMovieUrl && showCinemaHall" class="video-stage cinema-info-stage">
+          <div class="cinema-info-content">
+            <div class="cinema-playing-icon"><i class="fas fa-film"></i></div>
+            <h2>{{ currentMovieTitle }}</h2>
+            <p class="cinema-info-sub">Now playing in a new tab. Comments below <i class="fas fa-arrow-down"></i></p>
+            <div class="cinema-info-actions">
+              <button class="btn-watch-gradient" @click="reopenMovie"><i class="fas fa-redo"></i> REOPEN</button>
+              <button v-if="currentMovieYoutubeUrl" class="youtube-btn" @click="openYoutubeTrailer"><i class="fab fa-youtube"></i> Watch on YouTube</button>
+            </div>
           </div>
         </div>
 
         <div class="comment-section">
-          <h3 class="comment-title">💬 Comments</h3>
+          <h3 class="comment-title"><i class="fas fa-comments"></i> Comments</h3>
 
           <form class="comment-form" @submit.prevent="submitComment">
             <div v-if="!isAuthenticated" class="comment-login-prompt">
@@ -210,7 +236,11 @@
             </div>
 
             <button type="submit" class="auth-btn primary" :disabled="commentLoading || !isAuthenticated">
-              {{ commentLoading ? '⏳ SENDING...' : '📝 POST COMMENT' }}
+              <button type="submit" class="auth-btn primary" :disabled="commentLoading">
+                <i v-if="commentLoading" class="fas fa-spinner fa-pulse"></i>
+                <i v-else class="fas fa-pen"></i>
+                {{ commentLoading ? ' SENDING...' : ' POST COMMENT' }}
+              </button>
             </button>
           </form>
 
@@ -232,13 +262,16 @@
       <div v-if="currentPageName === 'login'" class="auth-container">
         <div class="auth-card">
           <div class="auth-tabs">
-            <button class="tab-btn" :class="{ active: !isRegister }" @click="isRegister = false">🔐 Login</button>
-            <button class="tab-btn" :class="{ active: isRegister }" @click="isRegister = true">🚀 Register</button>
+            <button class="tab-btn" :class="{ active: !isRegister }" @click="isRegister = false"><i class="fas fa-key"></i> Login</button>
+            <button class="tab-btn" :class="{ active: isRegister }" @click="isRegister = true"><i class="fas fa-rocket"></i> Register</button>
           </div>
 
           <div v-if="!isRegister" class="auth-forms">
             <form @submit.prevent="handleLogin" class="auth-form">
-              <div class="input-group"><input v-model="loginEmail" type="email" placeholder="Email" required class="glow-input" /><div class="input-glow"></div></div>
+              <div class="input-group">
+                <input v-model="loginEmail" type="text" placeholder="Email or Username" required class="glow-input" />
+                <div class="input-glow"></div>
+              </div>
               <div class="input-group password-group">
                 <input v-model="loginPassword" :type="showLoginPassword ? 'text' : 'password'" placeholder="Password" required class="glow-input" />
                 <button type="button" class="password-toggle" @click="showLoginPassword = !showLoginPassword">
@@ -246,11 +279,13 @@
                 </button>
                 <div class="input-glow"></div>
               </div>
-              <button type="submit" class="auth-btn primary" :disabled="loginLoading">{{ loginLoading ? '⏳ ENTERING...' : '🚀 LOGIN' }}</button>
+              <button type="submit" class="auth-btn primary" :disabled="loginLoading">
+                <i v-if="loginLoading" class="fas fa-spinner fa-pulse"></i>
+                <i v-else class="fas fa-rocket"></i>
+                {{ loginLoading ? ' ENTERING...' : ' LOGIN' }}
+              </button>
             </form>
             <p class="forgot-password"><button type="button" class="forgot-link" @click="currentPageName = 'forgot'">Forgot Password?</button></p>
-            <p class="demo-info">Demo: <span class="demo-link" @click="loginEmail='demo@filmz.com'; loginPassword='demo123'">demo@filmz.com / demo123</span></p>
-            <p class="admin-info">Admin: <span class="demo-link" @click="loginEmail='kasamuel71@gmail.com'; loginPassword='tetaornella@250'">kasamuel71@gmail.com / tetaornella@250</span></p>
           </div>
 
           <div v-else class="auth-forms">
@@ -258,7 +293,11 @@
               <div class="input-group"><input v-model="registerEmail" type="email" placeholder="Email" required class="glow-input" /><div class="input-glow"></div></div>
               <div class="input-group"><input v-model="registerPassword" type="password" placeholder="Password" required class="glow-input" /><div class="input-glow"></div></div>
               <div class="input-group"><input v-model="registerConfirmPassword" type="password" placeholder="Confirm Password" required class="glow-input" /><div class="input-glow"></div></div>
-              <button type="submit" class="auth-btn primary" :disabled="registerLoading">{{ registerLoading ? '⏳ CREATING...' : '⭐ REGISTER' }}</button>
+              <button type="submit" class="auth-btn primary" :disabled="registerLoading">
+                <i v-if="registerLoading" class="fas fa-spinner fa-pulse"></i>
+                <i v-else class="fas fa-star"></i>
+                {{ registerLoading ? ' CREATING...' : ' REGISTER' }}
+              </button>
             </form>
           </div>
 
@@ -278,7 +317,11 @@
           </div>
           <form @submit.prevent="handleForgotPassword" class="auth-form">
             <div class="input-group"><input v-model="forgotEmail" type="email" placeholder="Your Email" required class="glow-input" /><div class="input-glow"></div></div>
-            <button type="submit" class="auth-btn primary" :disabled="forgotLoading">{{ forgotLoading ? '⏳ SENDING...' : '📧 SEND RESET LINK' }}</button>
+            <button type="submit" class="auth-btn primary" :disabled="forgotLoading">
+              <i v-if="forgotLoading" class="fas fa-spinner fa-pulse"></i>
+              <i v-else class="fas fa-envelope"></i>
+              {{ forgotLoading ? ' SENDING...' : ' SEND RESET LINK' }}
+            </button>
           </form>
           <p v-if="resetSuccess" class="success-message">Check your email for the reset link!</p>
         </div>
@@ -293,7 +336,7 @@
         <div class="contact-orbit-container" @mousemove="updateContactOrbit" :style="contactOrbitStyle">
           <div class="contact-orbit-item email-orbit" @click="copyEmail">
             <div class="contact-item email">
-              <div class="contact-icon">📧</div>
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
               <h3>Email</h3>
               <p>kasamuel71@gmail.com</p>
             </div>
@@ -301,7 +344,7 @@
           <div class="contact-orbit-item phone-orbit" @click="copyPhone">
             <div class="orbit-ring"></div>
             <div class="contact-item phone">
-              <div class="contact-icon">📞</div>
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
               <h3>Phone</h3>
               <p>0723112258</p>
             </div>
@@ -309,7 +352,7 @@
           <div class="contact-orbit-item whatsapp-orbit" @click="openWhatsApp">
             <div class="orbit-ring"></div>
             <div class="contact-item whatsapp">
-              <div class="contact-icon">💬</div>
+              <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
               <h3>WhatsApp</h3>
               <p>+250 787 949 343</p>
             </div>
@@ -317,14 +360,14 @@
           <div class="contact-orbit-item instagram-orbit" @click="openInstagram">
             <div class="orbit-ring"></div>
             <div class="contact-item instagram">
-              <div class="contact-icon">📸</div>
+              <div class="contact-icon"><i class="fab fa-instagram"></i></div>
               <h3>Instagram</h3>
               <p>@ka_samuel250</p>
             </div>
           </div>
         </div>
 
-        <button class="back-btn" @click="resetHome">← BACK TO BASE</button>
+        <button class="back-btn" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO BASE</button>
       </div>
 
       <!-- Profile Page -->
@@ -337,8 +380,8 @@
             <div class="splash-content">
               <h1 class="splash-title">Join the Galaxy</h1>
               <p class="splash-subtitle">Sign in to access your profile, watch history, favorites, and personalized recommendations.</p>
-              <button class="splash-btn" @click="setPage('login')">🚀 LOGIN NOW</button>
-              <button class="splash-secondary" @click="resetHome">← BACK TO THEATER</button>
+              <button class="splash-btn" @click="setPage('login')"><i class="fas fa-rocket"></i> LOGIN NOW</button>
+              <button class="splash-secondary" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
             </div>
           </div>
         </div>
@@ -391,7 +434,7 @@
             </div>
           </div>
         </div>
-        <button class="back-btn" @click="resetHome">← BACK TO THEATER</button>
+        <button class="back-btn" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
       </div>
 
       <!-- Watchlists Page -->
@@ -404,8 +447,8 @@
             <div class="splash-content">
               <h1 class="splash-title">Create Your Lists</h1>
               <p class="splash-subtitle">Login to build and manage your personal watchlists. Save movies for later and never miss a favorite.</p>
-              <button class="splash-btn" @click="setPage('login')">🚀 LOGIN NOW</button>
-              <button class="splash-secondary" @click="resetHome">← BACK TO THEATER</button>
+              <button class="splash-btn" @click="setPage('login')"><i class="fas fa-rocket"></i> LOGIN NOW</button>
+              <button class="splash-secondary" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
             </div>
           </div>
         </div>
@@ -427,7 +470,7 @@
             </div>
           </div>
         </div>
-        <button class="back-btn" @click="resetHome">← BACK TO THEATER</button>
+        <button class="back-btn" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
       </div>
 
       <!-- Movie Details Page -->
@@ -441,17 +484,16 @@
               <p>Release: {{ movieDetails.release_date }}</p>
               <p>Rating: {{ movieDetails.vote_average }}/10</p>
               <div class="details-actions">
-                <button @click="playFullMovie(movieDetails)" class="btn-watch-gradient">WATCH NOW</button>
-                <button @click="addToFavorites(movieDetails)" class="btn-trailer-red">❤️ Favorite</button>
-                <button @click="shareMovie(movieDetails)" class="auth-btn primary">Share</button>
-                <button @click="downloadMovieFile(movieDetails)" class="btn-download-blue">⬇️ Download</button>
+                <button @click="playFullMovie(movieDetails)" class="btn-watch-gradient"><i class="fas fa-play"></i> WATCH NOW</button>
+                <button @click="playTrailer(movieDetails)" class="btn-trailer-red"><i class="fas fa-film"></i> TRAILER</button>
+                <button @click="addToFavorites(movieDetails)" class="btn-trailer-red"><i class="fas fa-heart"></i> Favorite</button>
               </div>
               <div class="download-options">
                 <h4>Download Options</h4>
                 <div class="download-buttons">
-                  <button @click="downloadPoster(movieDetails)" class="download-option">📸 Poster</button>
-                  <button @click="downloadTrailer(movieDetails)" class="download-option">🎬 Trailer</button>
-                  <button @click="cacheForOffline(movieDetails)" class="download-option">💾 Cache Offline</button>
+                  <button @click="downloadPoster(movieDetails)" class="download-option"><i class="fas fa-image"></i> Poster</button>
+                  <button @click="downloadTrailer(movieDetails)" class="download-option"><i class="fas fa-video"></i> Trailer</button>
+                  <button @click="cacheForOffline(movieDetails)" class="download-option"><i class="fas fa-database"></i> Cache Offline</button>
                 </div>
                 <p class="download-note">Note: Full movie downloads require browser extensions or third-party tools. Trailers and posters can be downloaded directly.</p>
               </div>
@@ -485,102 +527,200 @@
             </div>
           </div>
         </div>
-        <button class="back-btn" @click="setPage('home')">← BACK TO THEATER</button>
-      </div>
-
-      <!-- Merch Shop -->
-      <div v-if="currentPageName === 'merch'" class="merch-container">
-        <div class="merch-hero">
-          <h2>Official Merchandise</h2>
-          <p>Get your favorite movie gear</p>
-        </div>
-        <div class="merch-grid">
-          <div v-for="item in merchItems" :key="item.id" class="merch-card">
-            <img :src="item.image" :alt="item.name" />
-            <h3>{{ item.name }}</h3>
-            <p>${{ item.price }}</p>
-            <button @click="addToCart(item)" class="auth-btn primary">Add to Cart</button>
-          </div>
-        </div>
-        <div class="cart-section">
-          <h3>Cart ({{ cart.length }})</h3>
-          <div v-for="item in cart" :key="item.id" class="cart-item">
-            {{ item.name }} - ${{ item.price }}
-          </div>
-          <button v-if="cart.length" @click="checkout" class="auth-btn primary">Checkout</button>
-        </div>
-        <button class="back-btn" @click="resetHome">← BACK TO THEATER</button>
-      </div>
-
-      <!-- FAQ Page -->
-      <div v-if="currentPageName === 'faq'" class="faq-container">
-        <div class="faq-hero">
-          <h2>Frequently Asked Questions</h2>
-        </div>
-        <div class="faq-list">
-          <div v-for="(faq, index) in faqItems" :key="faq.question" class="faq-item">
-            <div class="faq-question" @click="toggleFaq(index)">
-              <h3>{{ faq.question }}</h3>
-              <span class="faq-toggle">{{ faq.open ? '−' : '+' }}</span>
-            </div>
-            <p class="faq-answer" :class="{ open: faq.open }">{{ faq.answer }}</p>
-          </div>
-        </div>
-        <div class="theater-finder">
-          <h3>Find Theaters Near You</h3>
-          <input v-model="theaterZip" type="text" placeholder="Enter ZIP code" class="glow-input" />
-          <button @click="findShowtimes" class="auth-btn primary">Find Showtimes</button>
-          <div v-for="showtime in showtimes" :key="showtime.id" class="showtime-item">
-            {{ showtime.theater }} - {{ showtime.time }}
-          </div>
-        </div>
-        <button class="back-btn" @click="resetHome">← BACK TO THEATER</button>
+        <button class="back-btn" @click="setPage('home')"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
       </div>
 
       <!-- Admin Panel -->
       <div v-if="currentPageName === 'admin'" class="admin-panel">
-        <div class="admin-hero">
-          <h2>Admin Dashboard</h2>
-          <p>Manage users and monitor movie view activity in one place.</p>
+        <!-- Admin Login Gate -->
+        <div v-if="!isAdminAuthenticated" class="admin-login-gate">
+          <div class="admin-lock-icon"><i class="fas fa-lock"></i></div>
+          <h2>Admin Control Center</h2>
+          <p>Enter administrator credentials to access the dashboard</p>
+          <form @submit.prevent="handleAdminLogin" class="admin-login-form">
+            <div class="input-group">
+              <input v-model="adminLoginUsername" type="text" placeholder="Username" class="glow-input" required />
+            </div>
+            <div class="input-group">
+              <input v-model="adminLoginPassword" type="password" placeholder="Password" class="glow-input" required />
+            </div>
+            <p v-if="adminLoginError" class="error-message">{{ adminLoginError }}</p>
+            <button type="submit" class="auth-btn primary admin-login-btn"><i class="fas fa-key"></i> ACCESS DASHBOARD</button>
+          </form>
         </div>
-        <div class="admin-metrics">
-          <div class="admin-card">
-            <h3>Total Users</h3>
-            <p>{{ adminStats.totalUsers }}</p>
-          </div>
-          <div class="admin-card">
-            <h3>Movie Views</h3>
-            <p>{{ adminStats.totalWatchRecords }}</p>
-          </div>
-        </div>
-        <div class="admin-section">
-          <h3>User Management</h3>
-          <div v-if="adminUsers.length" class="admin-user-list">
-            <div v-for="admin in adminUsers" :key="admin.id" class="admin-user-card">
-              <div>
-                <span class="admin-label">Email:</span>
-                <span>{{ admin.email }}</span>
-              </div>
-              <div>
-                <span class="admin-label">Joined:</span>
-                <span>{{ new Date(admin.createdAt).toLocaleDateString() }}</span>
-              </div>
-              <button class="admin-delete-btn" @click="deleteAdminUser(admin.id)">Remove</button>
+
+        <!-- Admin Dashboard -->
+        <div v-else class="admin-dashboard">
+          <div class="admin-header">
+            <div class="admin-header-left">
+              <h2><i class="fas fa-cog"></i> Admin Control Center</h2>
+              <p>Super control over all platform activities</p>
+            </div>
+            <div class="admin-header-right">
+              <span class="admin-badge"><i class="fas fa-shield-alt"></i> SUPER ADMIN</span>
+              <button class="admin-logout-btn" @click="handleAdminLogout"><i class="fas fa-right-from-bracket"></i> Logout</button>
             </div>
           </div>
-          <div v-else class="admin-empty">No users found.</div>
-        </div>
-        <div class="admin-section">
-          <h3>Top Movie Views</h3>
-          <div v-if="movieViews.length" class="movie-view-list">
-            <div v-for="view in movieViews" :key="view.movieTitle" class="movie-view-item">
-              <span>{{ view.movieTitle }}</span>
-              <strong>{{ view.views }} views</strong>
+
+          <!-- Metrics Grid -->
+          <div class="admin-metrics">
+            <div class="admin-card">
+              <div class="admin-card-icon"><i class="fas fa-users"></i></div>
+              <h3>Total Users</h3>
+              <p class="admin-stat-number">{{ adminStats.totalUsers }}</p>
+            </div>
+            <div class="admin-card">
+              <div class="admin-card-icon"><i class="fas fa-film"></i></div>
+              <h3>Movie Views</h3>
+              <p class="admin-stat-number">{{ adminStats.totalWatchRecords }}</p>
+            </div>
+            <div class="admin-card">
+              <div class="admin-card-icon"><i class="fas fa-comments"></i></div>
+              <h3>Total Comments</h3>
+              <p class="admin-stat-number">{{ adminStats.totalComments || 0 }}</p>
+            </div>
+            <div class="admin-card">
+              <div class="admin-card-icon"><i class="fas fa-envelope"></i></div>
+              <h3>Messages</h3>
+              <p class="admin-stat-number">{{ adminMessages.length }}</p>
             </div>
           </div>
-          <div v-else class="admin-empty">No view data available yet.</div>
+
+          <!-- Admin Tabs -->
+          <div class="admin-tabs">
+            <button class="admin-tab" :class="{ active: adminActiveTab === 'users' }" @click="adminActiveTab = 'users'"><i class="fas fa-users"></i> Users</button>
+            <button class="admin-tab" :class="{ active: adminActiveTab === 'comments' }" @click="adminActiveTab = 'comments'"><i class="fas fa-comments"></i> Comments</button>
+            <button class="admin-tab" :class="{ active: adminActiveTab === 'messages' }" @click="adminActiveTab = 'messages'"><i class="fas fa-envelope"></i> Messages</button>
+            <button class="admin-tab" :class="{ active: adminActiveTab === 'movies' }" @click="adminActiveTab = 'movies'"><i class="fas fa-film"></i> Movies</button>
+            <button class="admin-tab" :class="{ active: adminActiveTab === 'activity' }" @click="adminActiveTab = 'activity'"><i class="fas fa-chart-bar"></i> Activity</button>
+          </div>
+
+          <!-- Users Tab -->
+          <div v-if="adminActiveTab === 'users'" class="admin-section">
+            <h3><i class="fas fa-users"></i> User Management</h3>
+            <div class="admin-search-bar">
+              <input v-model="adminUserSearch" type="text" placeholder="Search users by email..." class="glow-input" />
+            </div>
+            <div v-if="filteredAdminUsers.length" class="admin-user-list">
+              <div v-for="u in filteredAdminUsers" :key="u.id" class="admin-user-card">
+                <div class="admin-user-info">
+                  <div class="admin-user-avatar">{{ u.email.charAt(0).toUpperCase() }}</div>
+                  <div>
+                    <span class="admin-user-email">{{ u.email }}</span>
+                    <span class="admin-user-date">Joined: {{ new Date(u.createdAt).toLocaleDateString() }}</span>
+                  </div>
+                </div>
+                <div class="admin-user-actions">
+                  <span class="admin-user-role" :class="u.role">{{ u.role || 'user' }}</span>
+                  <button class="admin-action-btn view" @click="viewUserActivity(u)" title="View Activity"><i class="fas fa-chart-bar"></i></button>
+                  <button class="admin-action-btn delete" @click="deleteAdminUser(u.id)" title="Remove User"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            </div>
+            <div v-else class="admin-empty">No users found.</div>
+          </div>
+
+          <!-- Comments Tab -->
+          <div v-if="adminActiveTab === 'comments'" class="admin-section">
+            <h3><i class="fas fa-comments"></i> All Comments</h3>
+            <div v-if="allComments.length" class="admin-comment-list">
+              <div v-for="c in allComments" :key="c.id" class="admin-comment-card">
+                <div class="admin-comment-header">
+                  <strong>{{ c.userName }}</strong>
+                  <span class="admin-comment-movie">on Movie #{{ c.movieId }}</span>
+                  <small>{{ c.date }}</small>
+                </div>
+                <p>{{ c.text }}</p>
+                <button class="admin-action-btn delete" @click="deleteAdminComment(c.id)"><i class="fas fa-trash"></i> Delete</button>
+              </div>
+            </div>
+            <div v-else class="admin-empty">No comments found.</div>
+          </div>
+
+          <!-- Messages Tab -->
+          <div v-if="adminActiveTab === 'messages'" class="admin-section">
+            <h3><i class="fas fa-envelope"></i> User Messages</h3>
+            <div v-if="adminMessages.length" class="admin-message-list">
+              <div v-for="msg in adminMessages" :key="msg.id" class="admin-message-card" :class="{ unread: !msg.isRead }">
+                <div class="admin-message-header">
+                  <div class="admin-message-sender">
+                    <strong>{{ msg.name || msg.email }}</strong>
+                    <span class="admin-message-subject">{{ msg.subject }}</span>
+                  </div>
+                  <div class="admin-message-meta">
+                    <small>{{ new Date(msg.createdAt).toLocaleString() }}</small>
+                    <button class="admin-action-btn delete" @click="deleteAdminMessage(msg.id)"><i class="fas fa-trash"></i></button>
+                  </div>
+                </div>
+                <p class="admin-message-body">{{ msg.message }}</p>
+                <div class="admin-message-reply">
+                  <input v-model="msg.replyText" type="text" placeholder="Type reply..." class="glow-input" />
+                  <button class="admin-action-btn reply" @click="replyToMessage(msg)">Reply</button>
+                </div>
+              </div>
+            </div>
+            <div v-else class="admin-empty">No messages yet.</div>
+          </div>
+
+          <!-- Movies Tab -->
+          <div v-if="adminActiveTab === 'movies'" class="admin-section">
+            <h3><i class="fas fa-film"></i> Top Movie Views</h3>
+            <div v-if="movieViews.length" class="movie-view-list">
+              <div v-for="view in movieViews" :key="view.movieTitle" class="movie-view-item">
+                <span class="movie-view-title">{{ view.movieTitle }}</span>
+                <span class="movie-view-count">{{ view.views }} views</span>
+              </div>
+            </div>
+            <div v-else class="admin-empty">No view data available yet.</div>
+          </div>
+
+          <!-- Activity Tab -->
+          <div v-if="adminActiveTab === 'activity'" class="admin-section">
+            <h3><i class="fas fa-chart-bar"></i> Recent Activity</h3>
+            <div v-if="recentActivity.length" class="activity-list">
+              <div v-for="act in recentActivity" :key="act.id" class="activity-item">
+                <span class="activity-icon"><i class="fas fa-circle" :class="getActivityIcon(act.type)"></i></span>
+                <div class="activity-detail">
+                  <span>{{ act.description }}</span>
+                  <small>{{ new Date(act.createdAt).toLocaleString() }}</small>
+                </div>
+              </div>
+            </div>
+            <div v-else class="admin-empty">No recent activity.</div>
+          </div>
+
+          <button class="back-btn" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
         </div>
-        <button class="back-btn" @click="resetHome">← BACK TO THEATER</button>
+      </div>
+
+      <!-- User Message to Admin -->
+      <div v-if="currentPageName === 'contact-admin'" class="contact-admin-container">
+        <div class="contact-admin-card">
+          <h2><i class="fas fa-envelope"></i> Send Message to Admin</h2>
+          <p>Have a question, suggestion, or issue? Send a message to the administrator.</p>
+          <form @submit.prevent="sendAdminMessage" class="admin-message-form">
+            <div class="input-group">
+              <input v-model="adminMsgName" type="text" placeholder="Your Name" class="glow-input" required />
+            </div>
+            <div class="input-group">
+              <input v-model="adminMsgEmail" type="email" placeholder="Your Email" class="glow-input" required />
+            </div>
+            <div class="input-group">
+              <input v-model="adminMsgSubject" type="text" placeholder="Subject" class="glow-input" required />
+            </div>
+            <div class="input-group">
+              <textarea v-model="adminMsgMessage" rows="5" placeholder="Your message..." class="glow-input" required></textarea>
+            </div>
+            <button type="submit" class="auth-btn primary" :disabled="adminMsgLoading">
+              <i v-if="adminMsgLoading" class="fas fa-spinner fa-pulse"></i>
+              <i v-else class="fas fa-paper-plane"></i>
+              {{ adminMsgLoading ? ' SENDING...' : ' SEND MESSAGE' }}
+            </button>
+            <p v-if="adminMsgSuccess" class="success-message">Message sent successfully! Admin will respond soon.</p>
+            <p v-if="adminMsgError" class="error-message">{{ adminMsgError }}</p>
+          </form>
+        </div>
+        <button class="back-btn" @click="resetHome"><i class="fas fa-arrow-left"></i> BACK TO THEATER</button>
       </div>
 
       <!-- Watchlist Selection Modal -->
@@ -607,7 +747,7 @@
       <!-- AI Chat Widget -->
       <div class="ai-chat-widget">
         <div v-if="!isChatOpen" class="chat-toggle" @click="toggleChat">
-          <div class="chat-icon">🤖</div>
+          <div class="chat-icon"><i class="fas fa-robot"></i></div>
         </div>
         <div v-else class="chat-window">
           <div class="chat-bg-particles">
@@ -631,7 +771,8 @@
               :disabled="isChatLoading"
             />
             <button @click="sendMessage" class="chat-send" :disabled="isChatLoading || !chatInput.trim()">
-              {{ isChatLoading ? '⏳' : '📤' }}
+              <i v-if="isChatLoading" class="fas fa-spinner fa-pulse"></i>
+              <i v-else class="fas fa-paper-plane"></i>
             </button>
           </div>
         </div>
@@ -642,7 +783,7 @@
     <footer class="app-footer">
       <div class="footer-content">
         <div class="footer-section">
-          <h4>Ka_samuel@250 Filmz</h4>
+          <h4>Ka_samuel250 Flims_store</h4>
           <p>Explore the galaxy of movies and series in an immersive space-themed experience.</p>
         </div>
         <div class="footer-section">
@@ -656,9 +797,9 @@
         </div>
         <div class="footer-section">
           <h4>Connect</h4>
-          <p><a href="mailto:kasamuel71@gmail.com" class="footer-link">📧 kasamuel71@gmail.com</a></p>
-          <p><a href="tel:+250787949343" class="footer-link">📱 +250 787 949 343</a></p>
-          <p><a href="https://instagram.com/ka_samuel250" target="_blank" rel="noopener noreferrer" class="footer-link">📸 @ka_samuel250</a></p>
+          <p><a href="mailto:kasamuel71@gmail.com" class="footer-link"><i class="fas fa-envelope"></i> kasamuel71@gmail.com</a></p>
+          <p><a href="tel:+250787949343" class="footer-link"><i class="fas fa-mobile-screen-button"></i> +250 787 949 343</a></p>
+          <p><a href="https://instagram.com/ka_samuel250" target="_blank" rel="noopener noreferrer" class="footer-link"><i class="fab fa-instagram"></i> @ka_samuel250</a></p>
         </div>
         <div class="footer-section">
           <h4>Theme</h4>
@@ -675,13 +816,13 @@
           <p>Stay connected and keep exploring new movies every time you return.</p>
         </div>
         <div class="footer-cta-buttons">
-          <a href="#" @click="resetHome" class="footer-cta-btn">🏠 Home</a>
+          <a href="#" @click="resetHome" class="footer-cta-btn"><i class="fas fa-house"></i> Home</a>
           <a href="mailto:kasamuel71@gmail.com" class="footer-cta-btn">Contact</a>
           <a href="https://instagram.com/ka_samuel250" target="_blank" rel="noopener noreferrer" class="footer-cta-btn secondary">Follow</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Ka_samuel@250 Filmz. All rights reserved.</p>
+        <p>&copy; 2026 Ka_samuel250 Flims_store. All rights reserved.</p>
       </div>
     </footer>
   </div>
@@ -690,8 +831,13 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const supabaseUrl = 'https://gnwexuyvbjcyggnmpbfp.supabase.co';
+const supabaseAnonKey = 'sb_publishable_yTzl54l-ioSt9vo75Tuu4Q_tYgbNqQ6';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY || 'e7db3a3c0e678db81b80238ab2bf0afa';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -705,6 +851,9 @@ const currentMovieTitle = ref('');
 const fullMovieUrl = ref(null);
 const currentMovieId = ref(null);
 const currentMovieDownloadUrl = ref(null);
+const showCinemaHall = ref(false);
+const currentMovieFallbackSources = ref([]);
+const currentMovieYoutubeUrl = ref('');
 const page = ref(1);
 const loading = ref(false);
 const scrollTrigger = ref(null);
@@ -752,17 +901,17 @@ const hoveredGenre = ref('');
 const adminUsers = ref([]);
 const adminStats = ref({ totalUsers: 0, totalWatchRecords: 0 });
 const movieViews = ref([]);
-const isAdmin = computed(() => user.value?.email === 'kasamuel71@gmail.com');
+const isAdmin = computed(() => user.value?.role === 'admin' || isAdminAuthenticated.value);
 const searchTimeout = ref(null);
 const genreOptions = ref([
-  { id: '', name: 'All Genres', icon: '🌌' },
-  { id: 28, name: 'Action', icon: '💥' },
-  { id: 35, name: 'Comedy', icon: '😂' },
-  { id: 18, name: 'Drama', icon: '🎭' },
-  { id: 27, name: 'Horror', icon: '💀' },
-  { id: 878, name: 'Sci-Fi', icon: '🚀' },
-  { id: 10749, name: 'Romance', icon: '❤️' },
-  { id: 14, name: 'Fantasy', icon: '🪄' }
+  { id: '', name: 'All Genres', icon: 'fa-globe' },
+  { id: 28, name: 'Action', icon: 'fa-bolt' },
+  { id: 35, name: 'Comedy', icon: 'fa-face-smile' },
+  { id: 18, name: 'Drama', icon: 'fa-masks-theater' },
+  { id: 27, name: 'Horror', icon: 'fa-skull' },
+  { id: 878, name: 'Sci-Fi', icon: 'fa-rocket' },
+  { id: 10749, name: 'Romance', icon: 'fa-heart' },
+  { id: 14, name: 'Fantasy', icon: 'fa-wand-magic-sparkles' }
 ]);
 const genreNebulaHue = {
   Action: '6deg',
@@ -783,26 +932,7 @@ const movieGenres = {
   14: 'Fantasy'
 };
 const advancedFilters = ref({ genre: '', year: '', rating: '', sortBy: 'popularity.desc' });
-const merchItems = ref([
-  { id: 1, name: 'Movie Poster', price: 15, image: 'https://via.placeholder.com/200x300?text=Poster' },
-  { id: 2, name: 'T-Shirt', price: 25, image: 'https://via.placeholder.com/200x300?text=T-Shirt' }
-]);
-const cart = ref([]);
-const faqItems = ref([
-  { question: 'How do I watch a movie?', answer: 'Click on a movie card and select "WATCH NOW". The movie will open in a new tab for the best viewing experience.', open: false },
-  { question: 'How do I create a watchlist?', answer: 'Open your profile, tap “Create New List”, and save movies directly from the movie card.', open: false },
-  { question: 'Can I save a movie to a specific list?', answer: 'Yes. Use the Watchlist button on the movie card and choose the list where you want to save it.', open: false },
-  { question: 'How does the AI assistant work?', answer: 'The AI assistant answers questions about movies, search tips, and app features directly from the chat widget.', open: false },
-  { question: 'How can I download trailers or posters?', answer: 'Use the Download section on the movie details page to save trailers, posters, or open streaming options.', open: false },
-  { question: 'How do I change the app theme?', answer: 'Select a theme from the footer dropdown to switch between Galaxy, Deep Space, Neon Cyber, and Retro Sci-Fi.', open: false }
-]);
-const theaterZip = ref('');
-const showtimes = ref([]);
 const newListName = ref('');
-
-const toggleFaq = (index) => {
-  faqItems.value[index].open = !faqItems.value[index].open;
-};
 const currentTheme = ref(localStorage.getItem('theme') || 'default');
 
 // AI Chat refs
@@ -818,6 +948,33 @@ const contactOrbitStyle = computed(() => ({
 const showWatchlistModal = ref(false);
 const selectedMovieForList = ref(null);
 const showNewListInput = ref(false);
+
+// Admin refs
+const isAdminAuthenticated = ref(false);
+const adminLoginUsername = ref('');
+const adminLoginPassword = ref('');
+const adminLoginError = ref('');
+const adminActiveTab = ref('users');
+const adminUserSearch = ref('');
+const allComments = ref([]);
+const adminMessages = ref([]);
+const recentActivity = ref([]);
+const adminMsgName = ref('');
+const adminMsgEmail = ref('');
+const adminMsgSubject = ref('');
+const adminMsgMessage = ref('');
+const adminMsgLoading = ref(false);
+const adminMsgSuccess = ref(false);
+const adminMsgError = ref('');
+
+const getActivityIcon = (type) => {
+  switch(type) {
+    case 'comment': return 'fa-comments';
+    case 'login': return 'fa-key';
+    case 'watch': return 'fa-film';
+    default: return 'fa-envelope';
+  }
+};
 
 let observer = null;
 
@@ -899,15 +1056,17 @@ const splashStars = computed(() => Array.from({ length: 150 }, (_, n) => ({
 
 const tmdbClient = axios.create({ baseURL: TMDB_BASE_URL });
 const apiClient = axios.create({ 
-  baseURL: API_BASE, 
-  withCredentials: true 
+  baseURL: API_BASE
 });
 
 // Add request interceptor to attach JWT token
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth_token');
-    if (token) {
+    const adminToken = localStorage.getItem('admin_token');
+    if (adminToken && config.url?.startsWith('/admin/')) {
+      config.headers.Authorization = `Bearer ${adminToken}`;
+    } else if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -1031,8 +1190,11 @@ const resetHome = () => {
   searchQuery.value = '';
   trailerUrl.value = null;
   fullMovieUrl.value = null;
+  showCinemaHall.value = false;
   currentMovieId.value = null;
   currentMovieDownloadUrl.value = null;
+  currentMovieFallbackSources.value = [];
+  currentMovieYoutubeUrl.value = '';
   mode.value = 'movie';
   currentPageName.value = 'home';
   loadData(true);
@@ -1042,30 +1204,42 @@ const setPage = (p) => {
   currentPageName.value = p;
   trailerUrl.value = null;
   fullMovieUrl.value = null;
+  showCinemaHall.value = false;
   currentMovieId.value = null;
   currentMovieDownloadUrl.value = null;
-  if (p === 'admin' && isAdmin.value) {
-    loadAdminDashboard();
+  currentMovieFallbackSources.value = [];
+  currentMovieYoutubeUrl.value = '';
+  if (p === 'admin') {
+    const adminToken = localStorage.getItem('admin_token');
+    if (adminToken && isAdmin.value) {
+      isAdminAuthenticated.value = true;
+      loadAdminDashboard();
+    }
   }
 };
 
 const openDetails = (item) => {
   currentMovieTitle.value = item.title || item.name || 'Untitled';
+  // Set mode based on item's media_type if available
+  if (item.media_type === 'movie' || item.media_type === 'tv') {
+    mode.value = item.media_type;
+  }
 };
 
 const playFullMovie = async (item) => {
-  const type = mode.value === 'movie' ? 'movie' : 'tv';
+  const type = item.media_type || mode.value || 'movie';
+  const mediaType = type === 'tv' ? 'tv' : 'movie';
   currentMovieTitle.value = item.title || item.name || 'Now Playing';
   currentMovieId.value = item.id;
-  currentMovieDownloadUrl.value = `https://vidsrc.to/${type}/${item.id}`;
+  currentMovieDownloadUrl.value = `https://vidsrc.to/${mediaType}/${item.id}`;
   
-  // Open movie in new tab instead of iframe to avoid mixed content issues
-  const movieUrl = `https://vidsrc.to/embed/${type}/${item.id}`;
-  window.open(movieUrl, '_blank', 'noopener,noreferrer');
-  
-  // Don't set fullMovieUrl to avoid showing iframe
-  fullMovieUrl.value = null;
   trailerUrl.value = null;
+  fullMovieUrl.value = null;
+  showCinemaHall.value = true;
+  
+  // Open movie in new tab
+  const movieUrl = `https://vidsrc.to/embed/${mediaType}/${item.id}`;
+  window.open(movieUrl, '_blank', 'noopener,noreferrer');
   
   if (isAuthenticated.value) {
     try {
@@ -1189,35 +1363,71 @@ const cacheForOffline = async (item) => {
 
 const playTrailer = async (item) => {
   try {
-    const res = await tmdbClient.get(`/${mode.value}/${item.id}/videos`, { params: { api_key: TMDB_API_KEY } });
-    const supported = ['YouTube', 'Vimeo', 'Dailymotion'];
+    const type = item.media_type || mode.value || 'movie';
+    currentMovieTitle.value = item.title || item.name || 'Trailer';
+    currentMovieId.value = item.id;
+    currentMovieDownloadUrl.value = null;
+    showCinemaHall.value = true;
+    fullMovieUrl.value = null;
+    trailerUrl.value = null;
+    currentMovieFallbackSources.value = [];
+    currentMovieYoutubeUrl.value = '';
+
+    const res = await tmdbClient.get(`/${type}/${item.id}/videos`, { params: { api_key: TMDB_API_KEY } });
+    const supported = ['YouTube', 'Vimeo'];
     let trailer = res.data.results.find(v => v.type === 'Trailer' && supported.includes(v.site));
     if (!trailer) {
       trailer = res.data.results.find(v => supported.includes(v.site));
     }
-    let url = getTrailerEmbedUrl(trailer);
-    if (!url) {
-      const type = mode.value === 'movie' ? 'movie' : 'tv';
-      url = `https://vidsrc.to/embed/${type}/${item.id}`;
+
+    if (trailer && trailer.site === 'YouTube') {
+      trailerUrl.value = `https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1&mute=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3`;
+      currentMovieYoutubeUrl.value = `https://www.youtube.com/watch?v=${trailer.key}`;
+    } else if (trailer && trailer.site === 'Vimeo') {
+      trailerUrl.value = `https://player.vimeo.com/video/${trailer.key}?autoplay=1&muted=1`;
+      currentMovieYoutubeUrl.value = '';
+    } else {
+      const searchQuery = encodeURIComponent(`${item.title || item.name} official trailer`);
+      currentMovieYoutubeUrl.value = `https://www.youtube.com/results?search_query=${searchQuery}`;
+      window.open(currentMovieYoutubeUrl.value, '_blank', 'noopener,noreferrer');
     }
-    currentMovieTitle.value = item.title || item.name || 'Trailer';
-    currentMovieId.value = item.id;
-    currentMovieDownloadUrl.value = null;
-    fullMovieUrl.value = null;
-    trailerUrl.value = url;
+
     await loadComments(item.id);
   } catch (err) {
     console.error('Trailer error', err);
-    alert('Could not load trailer.');
+    const searchQuery = encodeURIComponent(`${item.title || item.name} official trailer`);
+    currentMovieYoutubeUrl.value = `https://www.youtube.com/results?search_query=${searchQuery}`;
+    window.open(currentMovieYoutubeUrl.value, '_blank', 'noopener,noreferrer');
   }
 };
 
 const closePlayer = () => {
   trailerUrl.value = null;
   fullMovieUrl.value = null;
+  showCinemaHall.value = false;
   currentMovieId.value = null;
   currentMovieDownloadUrl.value = null;
+  currentMovieFallbackSources.value = [];
+  currentMovieYoutubeUrl.value = '';
   comments.value = [];
+};
+
+const reopenMovie = () => {
+  if (!currentMovieId.value) return;
+  const type = mode.value === 'movie' ? 'movie' : 'tv';
+  const movieUrl = `https://vidsrc.to/embed/${type}/${currentMovieId.value}`;
+  window.open(movieUrl, '_blank', 'noopener,noreferrer');
+};
+
+const switchTrailerSource = (src) => {
+  trailerUrl.value = src;
+  currentMovieFallbackSources.value = currentMovieFallbackSources.value.filter(s => s !== src);
+};
+
+const openYoutubeTrailer = () => {
+  if (currentMovieYoutubeUrl.value) {
+    window.open(currentMovieYoutubeUrl.value, '_blank', 'noopener,noreferrer');
+  }
 };
 
 const loadComments = async (movieId = null) => {
@@ -1258,19 +1468,29 @@ const handleLogin = async () => {
   loginLoading.value = true;
   loginError.value = '';
   try {
-    const response = await apiClient.post('/auth/login', { email: loginEmail.value, password: loginPassword.value });
+    const payload = {
+      email: loginEmail.value.includes('@') ? loginEmail.value : '',
+      username: loginEmail.value.includes('@') ? '' : loginEmail.value,
+      password: loginPassword.value
+    };
+
+    const response = await apiClient.post('/auth/login', payload);
     user.value = response.data.user;
     isAuthenticated.value = true;
     
-    // Store the token
     if (response.data.token) {
       localStorage.setItem('auth_token', response.data.token);
     }
     
+    if (response.data.user?.role === 'admin') {
+      localStorage.setItem('admin_token', response.data.token);
+      isAdminAuthenticated.value = true;
+    }
+    
     resetHome();
-    alert('Welcome back to the galaxy! 🌌');
+    alert('Welcome back to the galaxy!');
   } catch (error) {
-    loginError.value = error.response?.data?.error || error.response?.data?.message || 'Login failed. Try demo@filmz.com / demo123 or kasamuel71@gmail.com / tetaornella@250';
+    loginError.value = error.response?.data?.error || 'Login failed';
   } finally {
     loginLoading.value = false;
   }
@@ -1321,7 +1541,7 @@ const handleLogout = async () => {
     localStorage.removeItem('auth_token');
     
     resetHome();
-    alert('See you in the stars! 👋');
+    alert('See you in the stars!');
   } catch (error) {
     console.error('Logout error:', error);
     resetHome();
@@ -1488,18 +1708,118 @@ const deleteAdminUser = async (userId) => {
 
 const loadAdminDashboard = async () => {
   try {
-    const [usersRes, statsRes] = await Promise.all([
+    const [usersRes, statsRes, commentsRes, messagesRes, activityRes] = await Promise.all([
       apiClient.get('/admin/users'),
-      apiClient.get('/admin/stats')
+      apiClient.get('/admin/stats'),
+      apiClient.get('/admin/comments'),
+      apiClient.get('/admin/messages'),
+      apiClient.get('/admin/activity')
     ]);
     adminUsers.value = usersRes.data.users || [];
     adminStats.value = statsRes.data || { totalUsers: 0, totalWatchRecords: 0 };
     movieViews.value = statsRes.data.topMovieViews || [];
+    allComments.value = commentsRes.data.comments || [];
+    adminMessages.value = messagesRes.data.messages || [];
+    recentActivity.value = activityRes.data.activity || [];
   } catch (error) {
     console.error('Admin dashboard load error:', error);
-    alert('Could not load admin dashboard.');
   }
 };
+
+// Admin login with admin:admin
+const handleAdminLogin = async () => {
+  adminLoginError.value = '';
+  try {
+    const res = await apiClient.post('/auth/admin-login', {
+      username: adminLoginUsername.value,
+      password: adminLoginPassword.value
+    });
+    if (res.data.token) {
+      localStorage.setItem('admin_token', res.data.token);
+    }
+    isAdminAuthenticated.value = true;
+    loadAdminDashboard();
+  } catch (error) {
+    adminLoginError.value = error.response?.data?.error || 'Invalid admin credentials';
+  }
+};
+
+const handleAdminLogout = () => {
+  isAdminAuthenticated.value = false;
+  adminLoginUsername.value = '';
+  adminLoginPassword.value = '';
+  adminActiveTab.value = 'users';
+  localStorage.removeItem('admin_token');
+};
+
+// Admin comment management
+const deleteAdminComment = async (commentId) => {
+  try {
+    if (!confirm('Delete this comment?')) return;
+    await apiClient.delete(`/admin/comments/${commentId}`);
+    allComments.value = allComments.value.filter(c => c.id !== commentId);
+    alert('Comment deleted.');
+  } catch (error) {
+    console.error('Delete comment error:', error);
+  }
+};
+
+// Admin message management
+const deleteAdminMessage = async (msgId) => {
+  try {
+    if (!confirm('Delete this message?')) return;
+    await apiClient.delete(`/admin/messages/${msgId}`);
+    adminMessages.value = adminMessages.value.filter(m => m.id !== msgId);
+    alert('Message deleted.');
+  } catch (error) {
+    console.error('Delete message error:', error);
+  }
+};
+
+const replyToMessage = async (msg) => {
+  if (!msg.replyText?.trim()) return;
+  try {
+    await apiClient.post(`/admin/messages/${msg.id}/reply`, { reply: msg.replyText });
+    msg.replyText = '';
+    alert('Reply sent.');
+    loadAdminDashboard();
+  } catch (error) {
+    console.error('Reply error:', error);
+  }
+};
+
+const viewUserActivity = (user) => {
+  alert(`Viewing activity for ${user.email} - Opening detailed view...`);
+};
+
+// User sends message to admin
+const sendAdminMessage = async () => {
+  adminMsgLoading.value = true;
+  adminMsgSuccess.value = false;
+  adminMsgError.value = '';
+  try {
+    await apiClient.post('/admin/messages', {
+      name: adminMsgName.value,
+      email: adminMsgEmail.value,
+      subject: adminMsgSubject.value,
+      message: adminMsgMessage.value
+    });
+    adminMsgSuccess.value = true;
+    adminMsgName.value = '';
+    adminMsgEmail.value = '';
+    adminMsgSubject.value = '';
+    adminMsgMessage.value = '';
+  } catch (error) {
+    adminMsgError.value = error.response?.data?.error || 'Failed to send message.';
+  } finally {
+    adminMsgLoading.value = false;
+  }
+};
+
+const filteredAdminUsers = computed(() => {
+  if (!adminUserSearch.value.trim()) return adminUsers.value;
+  return adminUsers.value.filter(u => u.email.toLowerCase().includes(adminUserSearch.value.toLowerCase()));
+});
 
 const getTrailerEmbedUrl = (video) => {
   if (!video) return null;
@@ -1542,22 +1862,6 @@ const updateContactOrbit = (event) => {
   const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
   const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
   contactOrbitPosition.value = { x: x.toFixed(2), y: y.toFixed(2) };
-};
-
-const addToCart = (item) => {
-  cart.value.push(item);
-};
-
-const checkout = () => {
-  alert('Checkout not implemented yet. Total: $' + cart.value.reduce((sum, item) => sum + item.price, 0));
-};
-
-const findShowtimes = () => {
-  // Mock showtimes
-  showtimes.value = [
-    { id: 1, theater: 'Galaxy Cinema', time: '7:00 PM' },
-    { id: 2, theater: 'Starplex', time: '9:00 PM' }
-  ];
 };
 
 const changeTheme = () => {
@@ -1607,7 +1911,7 @@ const callGeminiAPI = async (message) => {
   const genAI = new GoogleGenerativeAI('AIzaSyCRoDifxmvJwGBdtUOiEVmGF-gsWQKNVLU');
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-  const prompt = `You are an AI assistant for a movie streaming app called "Ka_samuel@250 Filmz". 
+  const prompt = `You are an AI assistant for a movie streaming app called "Ka_samuel250 Flims_store". 
   The app features movie browsing, trailers, user profiles, watchlists, and more.
   Answer questions helpfully and stay in character as a friendly movie expert.
   User message: ${message}`;
@@ -2013,44 +2317,64 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
   text-shadow: 0 0 20px rgba(0,204,255,0.15);
 }
 .chameleon-name span { opacity: .9; }
-.nav-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; }
-.pill, .mode-btn, .search-action-btn, .auth-btn, .btn-watch-gradient, .btn-trailer-red, .download-btn, .exit-hall-btn, .back-btn, .tab-btn, .forgot-link {
+.nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .5rem;
+}
+.pill, .mode-btn, .search-action-btn, .auth-btn, .exit-hall-btn, .back-btn, .tab-btn, .forgot-link {
   border: none;
   cursor: pointer;
-  transition: transform .25s ease, box-shadow .25s ease, background .25s ease, opacity .25s ease;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  position: relative;
+  overflow: hidden;
 }
 .pill {
-  padding: .8rem 1rem;
-  border-radius: 999px;
-  color: #fff;
-  background: rgba(255,255,255,.08);
+  padding: .65rem 1rem;
+  border-radius: 12px;
+  color: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.06);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.06);
+  font-size: .85rem;
+  font-weight: 500;
+  letter-spacing: .3px;
 }
-.pill:hover, .mode-btn:hover, .search-action-btn:hover, .auth-btn:hover, .btn-watch-gradient:hover, .btn-trailer-red:hover, .btn-download-blue:hover, .exit-hall-btn:hover, .back-btn:hover, .tab-btn:hover {
-  transform: translateY(-3px) scale(1.02);
+.pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0,204,255,.12), rgba(255,0,68,.08));
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.pill:hover::before { opacity: 1; }
+.pill:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0,204,255,.2);
+  box-shadow: 0 8px 24px rgba(0,204,255,.12);
+  color: #fff;
+}
+.pill.active {
+  background: linear-gradient(135deg, rgba(0,204,255,.25), rgba(255,0,68,.2));
+  border-color: rgba(0,204,255,.3);
+  box-shadow: 0 0 20px rgba(0,204,255,.15), inset 0 1px 0 rgba(255,255,255,.1);
+  color: #fff;
+  font-weight: 600;
+}
+.pill span { margin-right: 4px; }
+.mode-btn:hover, .search-action-btn:hover, .auth-btn:hover, .exit-hall-btn:hover, .back-btn:hover, .tab-btn:hover {
+  transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(0,204,255,.18);
-}
-.pill.active, .mode-btn.active, .tab-btn.active {
-  background: linear-gradient(135deg, rgba(0,204,255,.35), rgba(255,0,68,.3));
-  box-shadow: 0 0 20px rgba(0,204,255,.24);
 }
 .cinema-actions {
   display: flex;
   gap: .75rem;
   align-items: center;
 }
-.download-btn {
-  padding: .9rem 1rem;
-  border-radius: 18px;
-  background: linear-gradient(135deg, rgba(0,204,255,.25), rgba(255,255,255,.18));
-  color: #fff;
-}
-.download-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(0,204,255,.18);
-}
 .content-wrapper { position: relative; z-index: 2; padding: 1.2rem; }
-/* ... rest of your existing styles remain exactly the same ... */
 .hero-section { max-width: 1400px; margin: 0 auto 1rem; display: grid; gap: 1rem; }
 .hero-copy { padding: 1rem 0 .5rem; display: grid; gap: 1rem; }
 .hero-heading-group { display: grid; gap: .75rem; }
@@ -2093,14 +2417,28 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 }
 .carousel-card:hover .hero-overlay { opacity: 1; }
 .hero-watch-btn {
-  padding: .85rem .9rem;
-  border-radius: 14px;
-  font-weight: 800;
+  padding: .65rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: .75rem;
+  letter-spacing: .8px;
+  text-transform: uppercase;
   color: #fff;
-  background: linear-gradient(135deg, #00ccff, #00ff88);
-  color: #001018;
-  border: none;
+  background: rgba(10,11,30,.9);
+  border: 1px solid rgba(0,204,255,.3);
   cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,204,255,.12);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.hero-watch-btn:hover {
+  background: linear-gradient(135deg, #00ccff, #0088cc);
+  color: #0a0b1e;
+  border-color: #00ccff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,204,255,.3);
 }
 .hero-poster, .carousel-card {
   position: relative;
@@ -2242,16 +2580,57 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 .m-title { margin: 0 0 .35rem; color: #fff; font-size: 1rem; }
 .m-info { margin: 0 0 .75rem; color: rgba(255,255,255,.72); }
 .btns { display: flex; gap: .65rem; flex-wrap: wrap; }
-.btn-watch-gradient, .btn-trailer-red, .btn-download-blue {
+.btn-watch-gradient, .btn-trailer-red {
   flex: 1 1 120px;
-  padding: .85rem .9rem;
-  border-radius: 14px;
-  font-weight: 800;
-  color: #fff;
 }
-.btn-watch-gradient { background: linear-gradient(135deg, #00ccff, #00ff88); color: #001018; }
-.btn-trailer-red { background: linear-gradient(135deg, #ff0044, #ff7a00); }
-.btn-download-blue { background: linear-gradient(135deg, #0066cc, #00aaff); }
+.btn-watch-gradient {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: .8rem;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  background: #0a0b1e;
+  color: #fff;
+  border: 1px solid rgba(0,204,255,.3);
+  box-shadow: 0 4px 20px rgba(0,204,255,.12);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.btn-watch-gradient:hover {
+  background: linear-gradient(135deg, #00ccff, #0088cc);
+  color: #0a0b1e;
+  border-color: #00ccff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,204,255,.3);
+}
+
+.btn-trailer-red {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: .8rem;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  background: transparent;
+  color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.15);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  cursor: pointer;
+}
+.btn-trailer-red:hover {
+  color: #ff4466;
+  border-color: rgba(255,68,102,.5);
+  background: rgba(255,68,102,.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255,68,102,.15);
+}
 .skeleton-card {
   position: relative;
   border-radius: 20px;
@@ -2311,8 +2690,91 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 .live-tag { color: #ff4d6d; font-weight: 800; letter-spacing: 1px; animation: pulseBadge 4s ease-in-out infinite; }
 .exit-hall-btn, .back-btn, .auth-btn, .search-action-btn { font-weight: 800; }
 .exit-hall-btn, .back-btn { padding: .9rem 1.1rem; border-radius: 14px; color: #fff; background: rgba(255,255,255,.08); }
-.video-wrapper { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
-.trailer-iframe { width: 100%; height: 100%; }
+.video-wrapper { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,.5); background: #000; }
+.trailer-iframe { width: 100%; height: 100%; border: none; }
+.cinema-info-stage {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(0,204,255,.06), rgba(255,0,68,.06));
+  border: 1px solid rgba(255,255,255,.08);
+}
+.cinema-info-content {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.cinema-playing-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 20px rgba(0,204,255,.3));
+}
+.cinema-info-content h2 {
+  color: #fff;
+  margin-bottom: .75rem;
+}
+.cinema-info-sub {
+  color: rgba(255,255,255,.7);
+  margin-bottom: 1.5rem;
+}
+.trailer-actions {
+  display: flex;
+  gap: .75rem;
+  margin-top: .75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.youtube-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .7rem 1.4rem;
+  border-radius: 12px;
+  border: none;
+  background: #ff0000;
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: all .25s ease;
+  box-shadow: 0 4px 16px rgba(255,0,0,.25);
+}
+.youtube-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 28px rgba(255,0,0,.35);
+}
+.cinema-info-actions {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.source-switcher {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-top: .75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.source-label {
+  color: rgba(255,255,255,.6);
+  font-size: .85rem;
+}
+.source-switch-btn {
+  padding: .5rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: #00ccff;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-size: .8rem;
+}
+.source-switch-btn:hover {
+  background: rgba(0,204,255,.12);
+  border-color: rgba(0,204,255,.3);
+  transform: translateY(-1px);
+}
 .comment-section {
   margin-top: 1rem;
   padding: 1.2rem;
@@ -2572,7 +3034,6 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 
 @keyframes colorShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-@keyframes colorShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulseRing { 0%,100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.08); opacity: 0.95; } }
 @keyframes floatContact { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -2585,7 +3046,7 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 }
 
 /* New styles for additional features */
-.profile-container, .watchlists-container, .movie-details-container, .merch-container, .faq-container {
+.profile-container, .watchlists-container, .movie-details-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem;
@@ -2744,84 +3205,6 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
   margin-bottom: 0.5rem;
 }
 
-.merch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.merch-card {
-  border-radius: 16px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.08);
-  padding: 1rem;
-  text-align: center;
-}
-
-.merch-card img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-}
-
-.cart-section {
-  border-radius: 16px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.08);
-  padding: 1rem;
-}
-
-.cart-item {
-  padding: 0.5rem;
-  border-bottom: 1px solid rgba(255,255,255,.1);
-}
-
-.faq-list {
-  display: grid;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.faq-item {
-  border-radius: 16px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.08);
-  padding: 1rem;
-}
-
-.faq-question {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  gap: 1rem;
-}
-
-.faq-question h3 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.faq-toggle {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(0,204,255,.16);
-  color: #fff;
-  font-size: 1.35rem;
-  transition: transform .2s ease, background .2s ease;
-}
-
-.faq-question:hover .faq-toggle {
-  transform: scale(1.08);
-  background: rgba(0,204,255,.25);
-}
-
 .faq-answer {
   margin-top: 0.85rem;
   color: rgba(255,255,255,.82);
@@ -2906,53 +3289,11 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
   gap: 1rem;
 }
 
-.admin-user-card div {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.admin-label {
-  color: rgba(255,255,255,0.65);
-  font-size: 0.8rem;
-}
-
-.admin-delete-btn {
-  border: none;
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
-  color: #fff;
-  padding: 0.8rem 1rem;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.admin-delete-btn:hover {
-  transform: translateY(-1px);
-}
-
 .admin-empty {
   padding: 1rem;
   border-radius: 16px;
   background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.75);
-}
-
-.theater-finder {
-  border-radius: 16px;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.08);
-  padding: 1rem;
-}
-
-.theater-finder input {
-  margin-bottom: 1rem;
-}
-
-.showtime-item {
-  padding: 0.5rem;
-  background: rgba(255,255,255,.05);
-  border-radius: 8px;
-  margin-top: 0.5rem;
 }
 
 .advanced-filters {
@@ -3335,6 +3676,473 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
   line-height: 1.5;
 }
 
+/* ===== ADMIN PANEL STYLES ===== */
+.admin-panel {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.admin-login-gate {
+  max-width: 420px;
+  margin: 4rem auto;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(16px);
+  text-align: center;
+}
+
+.admin-lock-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 0 20px rgba(0,204,255,.3));
+}
+
+.admin-login-gate h2 {
+  color: #fff;
+  margin-bottom: .5rem;
+}
+
+.admin-login-gate > p {
+  color: rgba(255,255,255,.7);
+  margin-bottom: 1.5rem;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-login-btn {
+  margin-top: .5rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(0,204,255,.1), rgba(255,0,68,.08));
+  border: 1px solid rgba(255,255,255,.1);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-header-left h2 {
+  margin: 0 0 .25rem;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.admin-header-left p {
+  margin: 0;
+  color: rgba(255,255,255,.65);
+  font-size: .9rem;
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-badge {
+  padding: .45rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff0044, #ff7a00);
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+
+.admin-logout-btn {
+  padding: .6rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.admin-logout-btn:hover {
+  background: rgba(255,0,68,.2);
+  border-color: rgba(255,0,68,.3);
+}
+
+.admin-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-card {
+  padding: 1.25rem;
+  background: rgba(0,204,255,.08);
+  border: 1px solid rgba(0,204,255,.12);
+  border-radius: 18px;
+  text-align: center;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,204,255,.12);
+}
+
+.admin-card-icon {
+  font-size: 2rem;
+  margin-bottom: .5rem;
+}
+
+.admin-card h3 {
+  margin: 0 0 .5rem;
+  font-size: .85rem;
+  color: rgba(255,255,255,.8);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.admin-stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  background: linear-gradient(90deg, #00ccff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding: .25rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,.04);
+}
+
+.admin-tab {
+  padding: .7rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  transition: all .25s ease;
+  white-space: nowrap;
+  font-size: .9rem;
+}
+
+.admin-tab:hover {
+  color: #fff;
+  background: rgba(255,255,255,.06);
+}
+
+.admin-tab.active {
+  background: linear-gradient(135deg, rgba(0,204,255,.2), rgba(255,0,68,.15));
+  color: #fff;
+  font-weight: 600;
+}
+
+.admin-section {
+  margin-bottom: 1.75rem;
+}
+
+.admin-section h3 {
+  color: #70f9d9;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.admin-search-bar {
+  margin-bottom: 1rem;
+}
+
+.admin-user-list,
+.admin-comment-list,
+.admin-message-list,
+.movie-view-list,
+.activity-list {
+  display: grid;
+  gap: .75rem;
+}
+
+.admin-user-card,
+.admin-comment-card,
+.admin-message-card,
+.movie-view-item,
+.activity-item {
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  transition: all .2s ease;
+}
+
+.admin-user-card:hover,
+.admin-comment-card:hover,
+.admin-message-card:hover {
+  border-color: rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+}
+
+.admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00ccff, #00ff88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #001018;
+}
+
+.admin-user-email {
+  display: block;
+  color: #fff;
+  font-weight: 500;
+}
+
+.admin-user-date {
+  display: block;
+  font-size: .8rem;
+  color: rgba(255,255,255,.55);
+}
+
+.admin-user-actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+
+.admin-user-role {
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  background: rgba(0,204,255,.15);
+  color: #00ccff;
+}
+
+.admin-user-role.admin {
+  background: rgba(255,0,68,.15);
+  color: #ff6b8b;
+}
+
+.admin-action-btn {
+  padding: .45rem .7rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-size: .9rem;
+}
+
+.admin-action-btn.view {
+  background: rgba(0,204,255,.12);
+  color: #00ccff;
+}
+
+.admin-action-btn.delete {
+  background: rgba(255,0,68,.12);
+  color: #ff6b8b;
+}
+
+.admin-action-btn.reply {
+  background: rgba(0,255,136,.12);
+  color: #00ff88;
+  padding: .6rem 1rem;
+  font-weight: 600;
+}
+
+.admin-action-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.admin-comment-header {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  margin-bottom: .5rem;
+  flex-wrap: wrap;
+}
+
+.admin-comment-header strong {
+  color: #70f9d9;
+}
+
+.admin-comment-movie {
+  color: rgba(255,255,255,.6);
+  font-size: .85rem;
+}
+
+.admin-comment-card p {
+  color: rgba(255,255,255,.85);
+  line-height: 1.6;
+  margin-bottom: .75rem;
+}
+
+.admin-message-card.unread {
+  border-left: 3px solid #00ccff;
+  background: rgba(0,204,255,.06);
+}
+
+.admin-message-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+
+.admin-message-sender strong {
+  display: block;
+  color: #fff;
+  margin-bottom: .2rem;
+}
+
+.admin-message-subject {
+  color: rgba(255,255,255,.65);
+  font-size: .85rem;
+}
+
+.admin-message-meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.admin-message-meta small {
+  color: rgba(255,255,255,.5);
+}
+
+.admin-message-body {
+  color: rgba(255,255,255,.8);
+  line-height: 1.6;
+  margin-bottom: .75rem;
+  padding: .75rem;
+  background: rgba(255,255,255,.03);
+  border-radius: 12px;
+}
+
+.admin-message-reply {
+  display: flex;
+  gap: .5rem;
+}
+
+.admin-message-reply .glow-input {
+  flex: 1;
+  padding: .6rem 1rem;
+  font-size: .85rem;
+}
+
+.movie-view-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movie-view-title {
+  color: #fff;
+  font-weight: 500;
+}
+
+.movie-view-count {
+  color: #00ff88;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.05);
+  border-radius: 12px;
+}
+
+.activity-detail span {
+  display: block;
+  color: rgba(255,255,255,.85);
+}
+
+.activity-detail small {
+  color: rgba(255,255,255,.5);
+  font-size: .8rem;
+}
+
+.admin-empty {
+  padding: 2rem;
+  text-align: center;
+  border-radius: 16px;
+  background: rgba(255,255,255,.03);
+  color: rgba(255,255,255,.55);
+  border: 1px dashed rgba(255,255,255,.1);
+}
+
+/* ===== CONTACT ADMIN STYLES ===== */
+.contact-admin-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.contact-admin-card {
+  padding: 2rem;
+  border-radius: 24px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(16px);
+}
+
+.contact-admin-card h2 {
+  color: #fff;
+  margin: 0 0 .5rem;
+}
+
+.contact-admin-card > p {
+  color: rgba(255,255,255,.7);
+  margin-bottom: 1.5rem;
+}
+
+.admin-message-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-message-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
 @media (max-width: 768px) {
   .footer-cta-row {
     flex-direction: column;
@@ -3343,6 +4151,16 @@ body { margin: 0; padding: 0; overflow-x: hidden; }
 
   .footer-cta-buttons {
     justify-content: flex-start;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 }
 

@@ -11,7 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.15.2",
-
+    "@supabase/supabase-js": "^2.39.0",
     "vue": "^3.5.12"
   },
   "devDependencies": {

@@ -8,8 +8,8 @@
       aria-label="Toggle AI Assistant"
     >
       <div class="glow-ring"></div>
-      <span v-if="!isOpen" class="icon">🤖</span>
-      <span v-else class="icon">✕</span>
+      <span v-if="!isOpen" class="icon"><i class="fas fa-robot"></i></span>
+      <span v-else class="icon"><i class="fas fa-xmark"></i></span>
     </button>
 
     <!-- 2. HIGH-END GLASSMOPHISM CHAT WINDOW -->
@@ -27,7 +27,7 @@
               <span class="v-tag">v2.0 Beta</span>
             </div>
           </div>
-          <button class="clear-btn" @click="clearChat" title="Clear Conversation">🗑️</button>
+          <button class="clear-btn" @click="clearChat" title="Clear Conversation"><i class="fas fa-trash"></i></button>
         </div>
 
         <!-- Scrollable Chat Body -->
@@ -36,9 +36,9 @@
           <div v-if="messages.length === 1" class="quick-actions">
             <p class="hint">Try asking about:</p>
             <div class="action-grid">
-              <button @click="quickAction('Top Trending')">🔥 Trending</button>
-              <button @click="quickAction('New Releases')">🍿 New</button>
-              <button @click="quickAction('Report a Bug')">🐞 Report Bug</button>
+              <button @click="quickAction('Top Trending')"><i class="fas fa-fire"></i> Trending</button>
+              <button @click="quickAction('New Releases')"><i class="fas fa-film"></i> New</button>
+              <button @click="quickAction('Report a Bug')"><i class="fas fa-bug"></i> Report Bug</button>
             </div>
           </div>
 
@@ -166,7 +166,7 @@ const generateAIResponse = async (input) => {
     return 'Use the search bar to find movies by title. Advanced filters include genre, year, and rating!';
   }
   if (lowerInput.includes('login') || lowerInput.includes('register')) {
-    return 'Login to save favorites, create watchlists, and access personalized features. Demo: demo@filmz.com / demo123';
+    return 'Login to save favorites, create watchlists, and access personalized features.';
   }
   if (lowerInput.includes('error') || lowerInput.includes('bug') || lowerInput.includes('problem')) {
     return 'If you\'re experiencing an error, try refreshing the page or clearing your browser cache. For persistent issues, contact support at kasamuel71@gmail.com with details.';
@@ -184,7 +184,7 @@ const generateAIResponse = async (input) => {
 </script>
 
 <style scoped>
-/* 🎨 OKLCH COLOR PALETTE */
+/* OKLCH COLOR PALETTE */
 :root {
   --neon-primary: oklch(0.7 0.25 20); /* Intense Red-Orange */
   --neon-secondary: oklch(0.65 0.2 300); /* Deep Purple */
@@ -200,7 +200,7 @@ const generateAIResponse = async (input) => {
   font-family: 'Outfit', sans-serif;
 }
 
-/* 🔘 TOGGLE BUTTON EVOLUTION */
+/* TOGGLE BUTTON */
 .ai-toggle {
   width: 65px;
   height: 65px;
@@ -237,7 +237,7 @@ const generateAIResponse = async (input) => {
 .ai-toggle:hover { transform: translateY(-5px) scale(1.05); }
 .ai-toggle.active { background: #ff3c00; border-radius: 50%; }
 
-/* 🧊 CONTAINER DESIGN */
+/* CONTAINER */
 .ai-container {
   position: absolute;
   bottom: 85px;
@@ -254,7 +254,7 @@ const generateAIResponse = async (input) => {
   transform-origin: bottom right;
 }
 
-/* 🏷️ HEADER */
+/* HEADER */
 .ai-header {
   padding: 1.2rem;
   background: rgba(255, 255, 255, 0.03);
@@ -283,7 +283,7 @@ const generateAIResponse = async (input) => {
 .clear-btn { background: transparent; border: none; cursor: pointer; filter: grayscale(1); transition: 0.3s; }
 .clear-btn:hover { filter: grayscale(0); transform: scale(1.1); }
 
-/* 💬 CHAT AREA */
+/* CHAT AREA */
 .chat-body {
   flex: 1;
   padding: 1.5rem;
@@ -363,7 +363,7 @@ const generateAIResponse = async (input) => {
 .send-btn:hover { background: #ff5500; transform: scale(1.1); }
 .send-icon { width: 18px; fill: white; }
 
-/* 🎭 REVEAL ANIMATION */
+/* REVEAL ANIMATION */
 .cyber-reveal-enter-active { animation: cyber-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .cyber-reveal-leave-active { animation: cyber-in 0.3s reverse ease-in; }
 
